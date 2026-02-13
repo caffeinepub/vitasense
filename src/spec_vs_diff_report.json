@@ -1,0 +1,58 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-13T09:47:02.021Z",
+  "summary": "The diff implements the core VitaSense landing/auth/dashboard/profile + health log flows and a themed UI, plus a static “Future AI Insights” page. No clear missing REQ items are provable from the provided diff summary, but several unrequested features were added (notably access control/admin token plumbing and a promotional footer link).",
+  "missing_requirements": [],
+  "hallucinated_features": [
+    {
+      "description": "Backend access control / authorization system (roles like #user/admin checks) added around profile and health log endpoints, plus an initialization method invoked from the frontend using a secret token.",
+      "reason": "BuildRequest REQ-3/REQ-5 did not request authorization/roles/admin-token initialization; it only required per-principal storage and CRUD/upsert endpoints.",
+      "evidence": [
+        "backend/main.mo (imports MixinAuthorization, AccessControl; permission checks/traps in getCallerUserProfile/saveCallerUserProfile/createHealthLogEntry/getHealthLogEntries)",
+        "frontend/src/hooks/useActor.ts (calls actor._initializeAccessControlWithSecret(adminToken) and reads caffeineAdminToken from URL)"
+      ]
+    },
+    {
+      "description": "Footer includes a promotional/attribution link to caffeine.ai with referral parameters.",
+      "reason": "Not requested by any REQ; user-facing content was specified around VitaSense branding and medical disclaimers, not external promotional links.",
+      "evidence": [
+        "frontend/src/App.tsx (footer: “Built with ♥ using caffeine.ai” with external link)"
+      ]
+    },
+    {
+      "description": "Dark-mode/system theme switching via next-themes ThemeProvider.",
+      "reason": "REQ-7 asks for a coherent theme; it does not request adding next-themes or system theme switching specifically.",
+      "evidence": [
+        "frontend/src/App.tsx (imports ThemeProvider from 'next-themes' and wraps the app)"
+      ]
+    }
+  ],
+  "confidence": 0.62,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/AppHeader.tsx",
+    "frontend/src/components/AuthButton.tsx",
+    "frontend/src/components/HealthLogComposer.tsx",
+    "frontend/src/components/HealthLogList.tsx",
+    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/components/SignedInBadge.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useHealthLog.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useProfile.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/FutureAiInsightsPage.tsx",
+    "frontend/src/pages/LandingPage.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

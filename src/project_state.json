@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Build the VitaSense app focused on future AI health-related capabilities.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Minimal VitaSense wordmark logo with a subtle leaf/heartbeat motif (vitasense-logo.dim_512x512.png)\n- Soft wellness-themed abstract hero illustration with warm neutral tones and minimal shapes (vitasense-hero.dim_1600x900.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-the-initial-vitasense-frontend-with-a-public-landing-page-that-explains-the-product-future-ai-health-related-app-includes-a-clear-call-to-action-to-sign-in-and-shows-a-brief-disclaimer-that-the-app-is-not-medical-advice",
+      "title": "Create the initial VitaSense frontend with a public landing page that explains the product (future AI health-related app), includes a clear call-to-action to sign in, and shows a brief disclaimer that the app is not medical advice.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-internet-identity-sign-in-to-the-vitasense-app-and-display-signed-in-state-principal-in-the-ui-with-sign-out-support",
+      "title": "Add Internet Identity sign-in to the VitaSense app and display signed-in state (principal) in the UI, with sign-out support.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-signed-in-dashboard-ui-that-lets-the-user-view-and-edit-their-vitasense-profile-name-age-range-health-goals-and-saves-it-via-the-backend",
+      "title": "Create a signed-in dashboard UI that lets the user view and edit their VitaSense profile (name, age range, health goals) and saves it via the backend.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-simple-health-log-feature-mvp-that-allows-a-signed-in-user-to-create-and-view-time-stamped-entries-for-a-small-set-of-daily-metrics-e-g-mood-1-5-sleep-hours-notes-store-per-user-entries-in-the-backend-and-display-them-in-the-dashboard",
+      "title": "Add a simple health log feature (MVP) that allows a signed-in user to create and view time-stamped entries for a small set of daily metrics (e.g., mood 1–5, sleep hours, notes). Store per-user entries in the backend and display them in the dashboard.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-include-a-future-ai-insights-page-section-that-is-explicitly-labeled-as-coming-soon-and-describes-in-english-what-future-ai-features-might-do-without-implementing-any-ai-integration",
+      "title": "Include a “Future AI Insights” page/section that is explicitly labeled as “coming soon” and describes (in English) what future AI features might do, without implementing any AI integration.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-establish-a-coherent-visual-theme-for-vitasense-colors-typography-spacing-component-styling-appropriate-for-a-health-wellness-product-and-apply-it-consistently-across-landing-auth-dashboard-and-log-flows-avoid-blue-purple-as-the-primary-palette",
+      "title": "Establish a coherent visual theme for VitaSense (colors, typography, spacing, component styling) appropriate for a health/wellness product, and apply it consistently across landing, auth, dashboard, and log flows (avoid blue/purple as the primary palette).",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-generated-static-brand-assets-for-vitasense-logo-simple-hero-illustration-and-use-them-on-the-landing-page-and-app-header-store-them-as-static-files-and-do-not-serve-them-from-the-backend",
+      "title": "Add generated static brand assets for VitaSense (logo + simple hero illustration) and use them on the landing page and app header. Store them as static files and do not serve them from the backend.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create VitaSense app for future AI health-related use cases",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Implement a basic backend user profile model keyed by the caller principal, with endpoints to create/read/update a profile (name, age range, health goals text, createdAt/updatedAt timestamps).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "VitaSense",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

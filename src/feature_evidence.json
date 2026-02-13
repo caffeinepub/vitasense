@@ -1,0 +1,155 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-the-initial-vitasense-frontend-with-a-public-landing-page-that-explains-the-product-future-ai-health-related-app-includes-a-clear-call-to-action-to-sign-in-and-shows-a-brief-disclaimer-that-the-app-is-not-medical-advice",
+      "featureTitle": "Create the initial VitaSense frontend with a public landing page that explains the product (future AI health-related app), includes a clear call-to-action to sign in, and shows a brief disclaimer that the app is not medical advice.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-internet-identity-sign-in-to-the-vitasense-app-and-display-signed-in-state-principal-in-the-ui-with-sign-out-support",
+      "featureTitle": "Add Internet Identity sign-in to the VitaSense app and display signed-in state (principal) in the UI, with sign-out support.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AuthButton.tsx",
+        "frontend/src/components/SignedInBadge.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-signed-in-dashboard-ui-that-lets-the-user-view-and-edit-their-vitasense-profile-name-age-range-health-goals-and-saves-it-via-the-backend",
+      "featureTitle": "Create a signed-in dashboard UI that lets the user view and edit their VitaSense profile (name, age range, health goals) and saves it via the backend.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useProfile.ts",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-simple-health-log-feature-mvp-that-allows-a-signed-in-user-to-create-and-view-time-stamped-entries-for-a-small-set-of-daily-metrics-e-g-mood-1-5-sleep-hours-notes-store-per-user-entries-in-the-backend-and-display-them-in-the-dashboard",
+      "featureTitle": "Add a simple health log feature (MVP) that allows a signed-in user to create and view time-stamped entries for a small set of daily metrics (e.g., mood 1–5, sleep hours, notes). Store per-user entries in the backend and display them in the dashboard.",
+      "files": [
+        "frontend/src/components/HealthLogComposer.tsx",
+        "frontend/src/components/HealthLogList.tsx",
+        "frontend/src/hooks/useHealthLog.ts",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-include-a-future-ai-insights-page-section-that-is-explicitly-labeled-as-coming-soon-and-describes-in-english-what-future-ai-features-might-do-without-implementing-any-ai-integration",
+      "featureTitle": "Include a “Future AI Insights” page/section that is explicitly labeled as “coming soon” and describes (in English) what future AI features might do, without implementing any AI integration.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/pages/FutureAiInsightsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-establish-a-coherent-visual-theme-for-vitasense-colors-typography-spacing-component-styling-appropriate-for-a-health-wellness-product-and-apply-it-consistently-across-landing-auth-dashboard-and-log-flows-avoid-blue-purple-as-the-primary-palette",
+      "featureTitle": "Establish a coherent visual theme for VitaSense (colors, typography, spacing, component styling) appropriate for a health/wellness product, and apply it consistently across landing, auth, dashboard, and log flows (avoid blue/purple as the primary palette).",
+      "files": [
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/index.css",
+        "frontend/src/pages/DashboardPage.tsx",
+        "frontend/src/pages/FutureAiInsightsPage.tsx",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-generated-static-brand-assets-for-vitasense-logo-simple-hero-illustration-and-use-them-on-the-landing-page-and-app-header-store-them-as-static-files-and-do-not-serve-them-from-the-backend",
+      "featureTitle": "Add generated static brand assets for VitaSense (logo + simple hero illustration) and use them on the landing page and app header. Store them as static files and do not serve them from the backend.",
+      "files": [
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

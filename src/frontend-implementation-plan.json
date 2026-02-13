@@ -1,0 +1,217 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "VitaSense initial frontend (landing, Internet Identity auth, dashboard profile + health log, coming-soon insights, theming, brand assets)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Public landing experience for VitaSense with product explanation, sign-in CTA, and non-medical disclaimer.",
+      "acceptanceCriteria": [
+        "Visiting the app shows a landing page branded as “VitaSense”.",
+        "Landing page includes a short description of the app’s goal (future AI health related).",
+        "Landing page includes an explicit non-medical disclaimer in English.",
+        "Landing page includes a sign-in entry point (button/link) even if the user is not signed in."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the top-level VitaSense app shell that renders a public landing section by default (signed-out), including product description + explicit non-medical disclaimer text and a prominent sign-in CTA. Wire navigation between landing and signed-in areas within this component (no changes to immutable frontend/src/main.tsx)."
+        },
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "create",
+          "description": "Implement the VitaSense landing page content (brand headline, short explanation of the future AI health goal, non-medical disclaimer in English, and a sign-in CTA). Use shadcn-ui components (e.g., Card, Button) for consistent layout and styling—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "create",
+          "description": "Create a reusable header that displays the VitaSense wordmark/logo and provides a clear sign-in entry point when signed out. Use shadcn-ui components for header actions (e.g., Button)—verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Internet Identity sign-in/out with visible signed-in state (principal) in the UI.",
+      "acceptanceCriteria": [
+        "User can sign in using Internet Identity.",
+        "After sign-in, the UI displays that the user is signed in (e.g., principal).",
+        "User can sign out and returns to signed-out state."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AuthButton.tsx",
+          "operation": "create",
+          "description": "Add an auth button component that uses the existing immutable hook frontend/src/hooks/useInternetIdentity.ts for Internet Identity login/logout. Ensure logout clears cached React Query data (queryClient.clear()) per the authorization component guidance. Use shadcn-ui Button for consistent styling—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/SignedInBadge.tsx",
+          "operation": "create",
+          "description": "Create a small UI element that shows signed-in state and displays the user principal (string) in the UI (and optionally also the profile name when available). Use shadcn-ui components (e.g., Badge) if available—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire authentication state into the app shell using the existing immutable hooks (useInternetIdentity + useActor). Show signed-in UI state (principal) and provide sign-out; ensure app content that shows personal data is only visible when authenticated, consistent with the authorization component guidance."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Signed-in dashboard UI for viewing/editing VitaSense profile and saving via backend actor.",
+      "acceptanceCriteria": [
+        "Signed-in users can open a dashboard page/section.",
+        "Dashboard shows profile fields and allows editing.",
+        "Saving updates persists and reloads correctly (confirmed by refresh).",
+        "Errors from backend are surfaced to the user in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "create",
+          "description": "Create the signed-in dashboard section/page that fetches the caller profile and renders editable fields for name, age range, and health goals, plus a save action. Ensure backend errors (including authorization traps) are shown to the user in English. Use shadcn-ui form primitives (e.g., Input, Textarea, Select, Button, Card, Alert) for consistent UX—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useProfile.ts",
+          "operation": "create",
+          "description": "Implement React Query hooks for profile read/update using the existing immutable useActor hook and backend interface methods (getCallerUserProfile, saveCallerUserProfile). Follow the authorization component guidance to avoid profile-setup flash by aligning query enabled/isFetched state with actor readiness—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the dashboard view into the app navigation. Gate dashboard rendering behind authentication (Internet Identity present) so personal data is not shown to guests, consistent with the authorization component guidance."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Health log MVP UI to create and view time-stamped entries (mood, sleep hours, notes) in the dashboard.",
+      "acceptanceCriteria": [
+        "User can add a new health log entry with mood, sleep hours, and notes.",
+        "Entries are stored per principal and persist across refreshes.",
+        "Dashboard displays a list of entries sorted newest-first.",
+        "User can view at least the last 20 entries (or all if fewer)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useHealthLog.ts",
+          "operation": "create",
+          "description": "Add React Query hooks for reading and creating health log entries using the existing immutable useActor hook and backend interface methods (getHealthLogEntries, createHealthLogEntry). Ensure refresh after creation and present errors in English."
+        },
+        {
+          "path": "frontend/src/components/HealthLogComposer.tsx",
+          "operation": "create",
+          "description": "Create a dashboard component that allows entry of mood (1–5), sleep hours, and notes and submits to the backend. Use shadcn-ui components (Input, Textarea, Button, Card) for consistent layout—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/HealthLogList.tsx",
+          "operation": "create",
+          "description": "Create a component that renders a newest-first list of health log entries, showing at least the last 20 entries (or all if fewer) with readable timestamps. Use shadcn-ui components (Card, Separator, Badge) for styling—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Integrate the health log composer and list into the dashboard UI. Ensure list sorting newest-first on the client and show a clear empty state when no entries exist."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Future AI Insights section/page labeled coming soon with static copy and non-medical disclaimer.",
+      "acceptanceCriteria": [
+        "There is a visible section/page labeled “Future AI Insights (Coming Soon)”.",
+        "The section contains only static explanatory copy and no external AI/API integration.",
+        "Copy clearly states it is not providing medical advice or diagnosis."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/FutureAiInsightsPage.tsx",
+          "operation": "create",
+          "description": "Create a static “Future AI Insights (Coming Soon)” page/section that describes potential future features in English, explicitly stating it does not provide medical advice or diagnosis and includes no AI or external API integration. Use shadcn-ui components (Card, Typography/prose styles) for readable formatting—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Future AI Insights page/section into the app navigation (reachable from header/nav in both signed-out and signed-in states, as appropriate) without creating additional unrequested top-level pages beyond this requirement."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Add a navigation entry to “Future AI Insights (Coming Soon)”. Use shadcn-ui navigation primitives if present—verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Cohesive VitaSense wellness theme (non-blue/purple primary palette) applied across landing, auth, dashboard, and log flows.",
+      "acceptanceCriteria": [
+        "App uses a consistent theme across pages (buttons, cards, headings, spacing).",
+        "Primary color palette is not predominantly blue/purple.",
+        "UI looks intentionally branded (not default-styled) while remaining readable and accessible."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Define VitaSense global theme tokens and base styles (Tailwind + shadcn variable system) with a warm wellness palette (avoid blue/purple as primary), consistent typography, and spacing defaults. Ensure accessible contrast for text and interactive elements."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust Tailwind theme extension as needed to support VitaSense branding (e.g., semantic color tokens mapped to CSS variables, consistent radii/shadows) while keeping the primary palette non-blue/purple."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Apply consistent themed styling to the header (background, borders, spacing, typography) using Tailwind utility classes and shadcn-ui components—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Apply VitaSense theme styling consistently to landing (hero layout, cards, CTA button styling, typography). Use shadcn-ui components where appropriate—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Apply VitaSense theme styling consistently to dashboard/profile and health log sections using shared layout patterns (cards, headings, spacing). Use shadcn-ui components where appropriate—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/FutureAiInsightsPage.tsx",
+          "operation": "modify",
+          "description": "Apply VitaSense theme styling to the Future AI Insights page/section for consistency (headings, prose, spacing). Use shadcn-ui components where appropriate—verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Add generated static VitaSense brand assets (logo + hero illustration) and use them in landing and header without backend serving.",
+      "acceptanceCriteria": [
+        "Logo and hero illustration exist as static assets under frontend/public/assets/generated.",
+        "Landing page displays the hero illustration and VitaSense logo.",
+        "App header/nav displays the logo in a compact form."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/vitasense-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated VitaSense wordmark logo asset as a static file at frontend/public/assets/generated/vitasense-logo.dim_512x512.png."
+        },
+        {
+          "path": "frontend/public/assets/generated/vitasense-hero.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated VitaSense hero illustration asset as a static file at frontend/public/assets/generated/vitasense-hero.dim_1600x900.png."
+        },
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Render the static brand assets on the landing page: display the hero illustration from frontend/public/assets/generated/vitasense-hero.dim_1600x900.png and the logo from frontend/public/assets/generated/vitasense-logo.dim_512x512.png. Use shadcn-ui layout components as needed—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Display the logo in compact form in the app header/nav using the static asset frontend/public/assets/generated/vitasense-logo.dim_512x512.png. Use shadcn-ui components for consistent sizing/alignment—verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

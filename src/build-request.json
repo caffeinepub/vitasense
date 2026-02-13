@@ -1,0 +1,172 @@
+{
+  "kind": "build_request",
+  "title": "Initial VitaSense app (AI health future-ready)",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create the initial VitaSense frontend with a public landing page that explains the product (future AI health-related app), includes a clear call-to-action to sign in, and shows a brief disclaimer that the app is not medical advice.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "I want create vitasense app for future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Visiting the app shows a landing page branded as “VitaSense”.",
+        "Landing page includes a short description of the app’s goal (future AI health related).",
+        "Landing page includes an explicit non-medical disclaimer in English.",
+        "Landing page includes a sign-in entry point (button/link) even if the user is not signed in."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add Internet Identity sign-in to the VitaSense app and display signed-in state (principal) in the UI, with sign-out support.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "I want create vitasense app for future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can sign in using Internet Identity.",
+        "After sign-in, the UI displays that the user is signed in (e.g., principal).",
+        "User can sign out and returns to signed-out state."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement a basic backend user profile model keyed by the caller principal, with endpoints to create/read/update a profile (name, age range, health goals text, createdAt/updatedAt timestamps).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "I want create vitasense app for future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend stores one profile per principal and persists across refreshes.",
+        "There are backend methods to get the current caller’s profile and upsert it.",
+        "Timestamps are set/updated appropriately when profile is created/updated."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create a signed-in dashboard UI that lets the user view and edit their VitaSense profile (name, age range, health goals) and saves it via the backend.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "I want create vitasense app for future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Signed-in users can open a dashboard page/section.",
+        "Dashboard shows profile fields and allows editing.",
+        "Saving updates persists and reloads correctly (confirmed by refresh).",
+        "Errors from backend are surfaced to the user in English."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add a simple health log feature (MVP) that allows a signed-in user to create and view time-stamped entries for a small set of daily metrics (e.g., mood 1–5, sleep hours, notes). Store per-user entries in the backend and display them in the dashboard.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "I want create vitasense app for future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can add a new health log entry with mood, sleep hours, and notes.",
+        "Entries are stored per principal and persist across refreshes.",
+        "Dashboard displays a list of entries sorted newest-first.",
+        "User can view at least the last 20 entries (or all if fewer)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Include a “Future AI Insights” page/section that is explicitly labeled as “coming soon” and describes (in English) what future AI features might do, without implementing any AI integration.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "There is a visible section/page labeled “Future AI Insights (Coming Soon)”.",
+        "The section contains only static explanatory copy and no external AI/API integration.",
+        "Copy clearly states it is not providing medical advice or diagnosis."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Establish a coherent visual theme for VitaSense (colors, typography, spacing, component styling) appropriate for a health/wellness product, and apply it consistently across landing, auth, dashboard, and log flows (avoid blue/purple as the primary palette).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "I want create vitasense app for future ai health related"
+        ]
+      },
+      "acceptanceCriteria": [
+        "App uses a consistent theme across pages (buttons, cards, headings, spacing).",
+        "Primary color palette is not predominantly blue/purple.",
+        "UI looks intentionally branded (not default-styled) while remaining readable and accessible."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add generated static brand assets for VitaSense (logo + simple hero illustration) and use them on the landing page and app header. Store them as static files and do not serve them from the backend.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "vitasense app"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Logo and hero illustration exist as static assets under frontend/public/assets/generated.",
+        "Landing page displays the hero illustration and VitaSense logo.",
+        "App header/nav displays the logo in a compact form."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor (all logic in the main actor file).",
+    "Do not edit any frontend files under immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose them instead).",
+    "Use English for all user-facing text."
+  ],
+  "nonGoals": [
+    "Implementing any real AI/LLM features or calling external AI services.",
+    "Medical diagnosis, treatment recommendations, or claims of clinical accuracy.",
+    "Real-time features (websockets/push notifications/chat).",
+    "Third-party authentication providers other than Internet Identity."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimal VitaSense wordmark logo with a subtle leaf/heartbeat motif (vitasense-logo.dim_512x512.png)",
+      "Soft wellness-themed abstract hero illustration with warm neutral tones and minimal shapes (vitasense-hero.dim_1600x900.png)"
+    ],
+    "edits": []
+  }
+}

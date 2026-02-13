@@ -1,0 +1,16 @@
+{
+  "frontend/src/index.css": "Global styles with warm wellness-themed OKLCH color system (sage green primary, warm neutrals) for both light and dark modes, avoiding blue/purple palette.",
+  "frontend/tailwind.config.js": "Tailwind configuration extended with VitaSense wellness theme tokens, custom fonts, shadows, and animations.",
+  "frontend/src/App.tsx": "Main application component managing authentication state, view navigation (landing/dashboard/insights), profile setup modal, and theme provider integration.",
+  "frontend/src/components/AppHeader.tsx": "Sticky header component displaying VitaSense logo, navigation menu, signed-in badge, and authentication button.",
+  "frontend/src/components/AuthButton.tsx": "Authentication button component handling Internet Identity login/logout with loading states and query cache clearing.",
+  "frontend/src/components/SignedInBadge.tsx": "Badge component displaying user's name (from profile) or shortened principal ID when authenticated.",
+  "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog for first-time profile setup requiring name, age range, and optional health goals.",
+  "frontend/src/components/HealthLogComposer.tsx": "Form component for creating new health log entries with mood slider, sleep hours input, and notes textarea.",
+  "frontend/src/components/HealthLogList.tsx": "Scrollable list displaying up to 20 most recent health log entries with formatted timestamps and metrics.",
+  "frontend/src/pages/LandingPage.tsx": "Public landing page with hero section, feature cards, medical disclaimer, and call-to-action for sign-in.",
+  "frontend/src/pages/DashboardPage.tsx": "Authenticated dashboard displaying user profile (editable), health log composer, and health log list.",
+  "frontend/src/pages/FutureAiInsightsPage.tsx": "Static \"coming soon\" page describing planned AI features with prominent medical disclaimer.",
+  "frontend/src/hooks/useProfile.ts": "React Query hooks for fetching and updating user profile with proper actor dependency handling.",
+  "frontend/src/hooks/useHealthLog.ts": "React Query hooks for fetching health log entries and creating new entries with automatic cache invalidation."
+}
