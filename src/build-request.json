@@ -1,171 +1,249 @@
 {
   "kind": "build_request",
-  "title": "Initial VitaSense app (AI health future-ready)",
+  "title": "Build Digital Detox mobile app with focus tracking, challenges, and gamification",
+  "projectName": "Digital Detox",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Create the initial VitaSense frontend with a public landing page that explains the product (future AI health-related app), includes a clear call-to-action to sign in, and shows a brief disclaimer that the app is not medical advice.",
-      "target": "frontend",
+      "text": "Replace the current health-focused backend with a user management system that stores: uid, name, email, dailyLimit (number), currentScreenTime (number), streak (number), totalPoints (number), level (text), challenges (array), focusSessions (array), and createdAt (timestamp)",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "I want create vitasense app for future ai health related"
+          "Users Collection: uid, name, email, dailyLimit, currentScreenTime, streak, totalPoints, level, challenges[], focusSessions[], createdAt"
         ]
       },
       "acceptanceCriteria": [
-        "Visiting the app shows a landing page branded as “VitaSense”.",
-        "Landing page includes a short description of the app’s goal (future AI health related).",
-        "Landing page includes an explicit non-medical disclaimer in English.",
-        "Landing page includes a sign-in entry point (button/link) even if the user is not signed in."
+        "Backend stores all user profile fields in stable storage",
+        "CRUD operations available for user data",
+        "Authentication required for profile access"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add Internet Identity sign-in to the VitaSense app and display signed-in state (principal) in the UI, with sign-out support.",
+      "text": "Create an onboarding flow with a welcome screen that collects: average daily screen time, biggest distraction apps (text input), main goal (dropdown with options: Reduce addiction, Improve focus, Sleep better), daily screen time limit, and preferred focus duration",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "I want create vitasense app for future ai health related"
+          "Onboarding (First Launch) Welcome screen with calming animation Ask: Average daily screen time, Biggest distraction apps, Main goal (Reduce addiction / Improve focus / Sleep better), Let user set: Daily screen time limit, Preferred focus duration"
         ]
       },
       "acceptanceCriteria": [
-        "User can sign in using Internet Identity.",
-        "After sign-in, the UI displays that the user is signed in (e.g., principal).",
-        "User can sign out and returns to signed-out state."
+        "Multi-step onboarding form with progress indicator",
+        "All fields validated before submission",
+        "Data saved to backend on completion",
+        "Onboarding only shown once per user"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Implement a basic backend user profile model keyed by the caller principal, with endpoints to create/read/update a profile (name, age range, health goals text, createdAt/updatedAt timestamps).",
-      "target": "backend",
+      "text": "Build a home dashboard showing: today's screen time, remaining allowed time, progress bar visualization, current streak count, dynamic motivational quote that changes daily, 'Start Focus Session' button, and 'Join Challenge' button",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "I want create vitasense app for future ai health related"
+          "Home Dashboard Show: Today's screen time, Remaining allowed time, Progress bar, Current streak, Motivational quote (dynamic daily), Button: 'Start Focus Session', Button: 'Join Challenge'"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores one profile per principal and persists across refreshes.",
-        "There are backend methods to get the current caller’s profile and upsert it.",
-        "Timestamps are set/updated appropriately when profile is created/updated."
+        "Dashboard displays real-time screen time data",
+        "Progress bar accurately reflects time used vs. limit",
+        "Motivational quote updates daily",
+        "Buttons navigate to respective features"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Create a signed-in dashboard UI that lets the user view and edit their VitaSense profile (name, age range, health goals) and saves it via the backend.",
-      "target": "both",
+      "text": "Implement a Focus Mode feature with timer options (25 minutes, 45 minutes, Custom), countdown animation, warning popup if user attempts to exit early, and on completion: award points, show success animation, and increase streak counter",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "I want create vitasense app for future ai health related"
+          "Focus Mode Timer options (25 / 45 / Custom), Countdown animation, Block selected distracting apps during session, If user exits → warning popup, On completion: Award points, Show success animation, Increase streak"
         ]
       },
       "acceptanceCriteria": [
-        "Signed-in users can open a dashboard page/section.",
-        "Dashboard shows profile fields and allows editing.",
-        "Saving updates persists and reloads correctly (confirmed by refresh).",
-        "Errors from backend are surfaced to the user in English."
+        "Timer displays countdown with visual animation",
+        "Custom timer accepts user input in minutes",
+        "Exit warning appears when attempting early exit",
+        "Completion triggers point award and streak increment",
+        "Success animation plays on session completion"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Add a simple health log feature (MVP) that allows a signed-in user to create and view time-stamped entries for a small set of daily metrics (e.g., mood 1–5, sleep hours, notes). Store per-user entries in the backend and display them in the dashboard.",
+      "text": "Create a Digital Detox Challenges system with pre-built challenges: '7-Day Detox', 'No Social Media Sunday', '2 Hours No Phone Before Sleep', plus the ability to create custom challenges. Track completion percentage, daily progress, and award bonus points on completion",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "I want create vitasense app for future ai health related"
+          "Digital Detox Challenges Pre-built challenges: 7-Day Detox, No Social Media Sunday, 2 Hours No Phone Before Sleep, Custom challenge option, Track: Completion %, Daily progress, Reward bonus points"
         ]
       },
       "acceptanceCriteria": [
-        "User can add a new health log entry with mood, sleep hours, and notes.",
-        "Entries are stored per principal and persist across refreshes.",
-        "Dashboard displays a list of entries sorted newest-first.",
-        "User can view at least the last 20 entries (or all if fewer)."
+        "Pre-built challenges available in a list",
+        "Users can join and leave challenges",
+        "Daily progress tracked and displayed",
+        "Completion percentage calculated accurately",
+        "Bonus points awarded on challenge completion",
+        "Custom challenge creation with name, duration, and rules"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Include a “Future AI Insights” page/section that is explicitly labeled as “coming soon” and describes (in English) what future AI features might do, without implementing any AI integration.",
+      "text": "Build a Statistics & Analytics page with daily, weekly, and monthly charts showing: screen time comparison, focus hours tracked, streak history, and improvement percentage over time",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "future ai health related"
+          "Statistics & Analytics Daily / Weekly / Monthly charts, Screen time comparison, Focus hours tracked, Streak history, Improvement percentage"
         ]
       },
       "acceptanceCriteria": [
-        "There is a visible section/page labeled “Future AI Insights (Coming Soon)”.",
-        "The section contains only static explanatory copy and no external AI/API integration.",
-        "Copy clearly states it is not providing medical advice or diagnosis."
+        "Toggle between daily, weekly, and monthly views",
+        "Charts display screen time trends",
+        "Focus hours aggregated and visualized",
+        "Streak history shown with dates",
+        "Improvement percentage calculated from baseline"
       ]
     },
     {
       "id": "REQ-7",
-      "text": "Establish a coherent visual theme for VitaSense (colors, typography, spacing, component styling) appropriate for a health/wellness product, and apply it consistently across landing, auth, dashboard, and log flows (avoid blue/purple as the primary palette).",
-      "target": "frontend",
+      "text": "Implement a rewards and gamification system with a points mechanism, level progression (Beginner, Consistent, Focused Mind, Digital Master), unlockable badges, and a visual progress tracker showing current level and points to next level",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "I want create vitasense app for future ai health related"
+          "Rewards & Gamification Points system, Level system: Beginner, Consistent, Focused Mind, Digital Master, Unlock badges, Visual progress tracker"
         ]
       },
       "acceptanceCriteria": [
-        "App uses a consistent theme across pages (buttons, cards, headings, spacing).",
-        "Primary color palette is not predominantly blue/purple.",
-        "UI looks intentionally branded (not default-styled) while remaining readable and accessible."
+        "Points awarded for completing focus sessions and challenges",
+        "Level thresholds defined for each tier",
+        "Badges unlock based on achievements",
+        "Progress tracker shows current level and next milestone",
+        "Level-up animation displays on progression"
       ]
     },
     {
       "id": "REQ-8",
-      "text": "Add generated static brand assets for VitaSense (logo + simple hero illustration) and use them on the landing page and app header. Store them as static files and do not serve them from the backend.",
+      "text": "Create an AI Smart Assistant feature that analyzes user usage patterns and provides personalized suggestions including: best focus time recommendations, detox tips, app usage warnings, and a daily personalized notification",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-20"
         ],
         "quotes": [
-          "vitasense app"
+          "AI Smart Assistant Analyze user usage patterns, Suggest: Best focus time, Detox tips, App usage warnings, Daily personalized notification"
         ]
       },
       "acceptanceCriteria": [
-        "Logo and hero illustration exist as static assets under frontend/public/assets/generated.",
-        "Landing page displays the hero illustration and VitaSense logo.",
-        "App header/nav displays the logo in a compact form."
+        "AI suggestions based on historical usage data",
+        "Recommendations update daily",
+        "Tips displayed in a dedicated assistant section",
+        "Notifications sent at optimal times based on user patterns"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Build a reminder system that alerts users when screen time limit is approaching, sends a gentle 'Time to disconnect 🌙' notification at night, and allows custom reminder scheduling",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Reminder System Alert when screen time limit is near, Gentle 'Time to disconnect 🌙' at night, Custom reminder scheduling"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Notification triggers at 80% of daily limit",
+        "Nighttime reminder sent at user-configured time",
+        "Custom reminders can be added with time and message",
+        "Reminder preferences saved to user profile"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Create a Settings page with options to: edit screen time limit, change theme (with Dark Mode as default), control notification preferences, reset all data, and logout",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Settings Edit screen limit, Change theme, Notification control, Data reset, Account logout"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Screen limit editable with validation",
+        "Theme toggle switches between light and dark modes",
+        "Notification settings persist across sessions",
+        "Data reset confirms before clearing all user data",
+        "Logout clears session and returns to landing page"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Apply a cohesive visual design with a calm blue and soft purple color palette as the default dark mode theme, minimalistic layout using soft rounded cards, smooth transitions and minimal animations throughout the app, modern typography, and clean bottom navigation",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-20"
+        ],
+        "quotes": [
+          "Dark Mode default (calm blue + soft purple theme), Smooth minimal animations",
+          "Minimalistic layout, Soft rounded cards, Smooth transitions, Calm color palette, Modern typography, Clean bottom navigation"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dark mode is the default theme",
+        "Blue and purple accent colors used consistently",
+        "All cards have rounded corners",
+        "Transitions animate smoothly between states",
+        "Typography is clear and modern",
+        "Bottom navigation provides quick access to main sections"
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (all logic in the main actor file).",
-    "Do not edit any frontend files under immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose them instead).",
-    "Use English for all user-facing text."
+    "The platform does not support React Native, Flutter, Firebase Authentication, Firebase Firestore, or device permission-based app usage tracking",
+    "Backend must use Motoko in a single-actor architecture",
+    "Frontend must use React with TypeScript, Tailwind CSS, and React Query",
+    "Authentication must use Internet Identity (not Firebase or Google login)",
+    "All data persistence must use Motoko stable storage (not external databases)",
+    "Real-time app blocking and native mobile notifications are not supported"
   ],
   "nonGoals": [
-    "Implementing any real AI/LLM features or calling external AI services.",
-    "Medical diagnosis, treatment recommendations, or claims of clinical accuracy.",
-    "Real-time features (websockets/push notifications/chat).",
-    "Third-party authentication providers other than Internet Identity."
+    "Native mobile app development for iOS or Android",
+    "Integration with device-level app usage tracking APIs",
+    "Firebase or third-party authentication services",
+    "External database connections",
+    "Real-time push notifications",
+    "Play Store publishing and app store optimization",
+    "Native app blocking functionality"
   ],
   "imageRequirements": {
     "required": [
-      "Minimal VitaSense wordmark logo with a subtle leaf/heartbeat motif (vitasense-logo.dim_512x512.png)",
-      "Soft wellness-themed abstract hero illustration with warm neutral tones and minimal shapes (vitasense-hero.dim_1600x900.png)"
+      "Calming welcome illustration with abstract waves and gradients in calm blue and soft purple tones (welcome-hero.dim_800x600.png)",
+      "Success celebration animation frame showing sparkles and achievement badge in purple and blue gradient (success-celebration.dim_400x400.png)",
+      "Digital detox themed app icon with minimal phone symbol and zen elements in blue and purple palette (app-icon.dim_512x512.png)"
     ],
     "edits": []
   }

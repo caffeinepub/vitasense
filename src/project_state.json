@@ -1,65 +1,97 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Build the VitaSense app focused on future AI health-related capabilities.",
-  "architectural_notes": [],
+  "summary": "Digital Detox mobile app to help users reduce screen time, improve focus, and build healthy digital habits through tracking, challenges, rewards, and AI-powered insights",
+  "architectural_notes": [
+    "React Native or Flutter for cross-platform mobile app",
+    "Firebase Authentication for user management",
+    "Firebase Firestore for data storage",
+    "Local notifications for reminders and alerts",
+    "App usage tracking with device permissions",
+    "Dark mode with calm blue and soft purple theme",
+    "Firestore schema: users collection with uid, name, email, dailyLimit, currentScreenTime, streak, totalPoints, level, challenges[], focusSessions[], createdAt"
+  ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Minimal VitaSense wordmark logo with a subtle leaf/heartbeat motif (vitasense-logo.dim_512x512.png)\n- Soft wellness-themed abstract hero illustration with warm neutral tones and minimal shapes (vitasense-hero.dim_1600x900.png)",
+  "imageRequirements": "## Required Images\n- Calming welcome illustration with abstract waves and gradients in calm blue and soft purple tones (welcome-hero.dim_800x600.png)\n- Success celebration animation frame showing sparkles and achievement badge in purple and blue gradient (success-celebration.dim_400x400.png)\n- Digital detox themed app icon with minimal phone symbol and zen elements in blue and purple palette (app-icon.dim_512x512.png)",
   "existing_features": [
     {
-      "id": "feature-create-the-initial-vitasense-frontend-with-a-public-landing-page-that-explains-the-product-future-ai-health-related-app-includes-a-clear-call-to-action-to-sign-in-and-shows-a-brief-disclaimer-that-the-app-is-not-medical-advice",
-      "title": "Create the initial VitaSense frontend with a public landing page that explains the product (future AI health-related app), includes a clear call-to-action to sign in, and shows a brief disclaimer that the app is not medical advice.",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-internet-identity-sign-in-to-the-vitasense-app-and-display-signed-in-state-principal-in-the-ui-with-sign-out-support",
-      "title": "Add Internet Identity sign-in to the VitaSense app and display signed-in state (principal) in the UI, with sign-out support.",
+      "id": "feature-create-an-onboarding-flow-with-a-welcome-screen-that-collects-average-daily-screen-time-biggest-distraction-apps-text-input-main-goal-dropdown-with-options-reduce-addiction-improve-focus-sleep-better-daily-screen-time-limit-and-preferred-focus-duration",
+      "title": "Create an onboarding flow with a welcome screen that collects: average daily screen time, biggest distraction apps (text input), main goal (dropdown with options: Reduce addiction, Improve focus, Sleep better), daily screen time limit, and preferred focus duration",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-a-signed-in-dashboard-ui-that-lets-the-user-view-and-edit-their-vitasense-profile-name-age-range-health-goals-and-saves-it-via-the-backend",
-      "title": "Create a signed-in dashboard UI that lets the user view and edit their VitaSense profile (name, age range, health goals) and saves it via the backend.",
+      "id": "feature-build-a-home-dashboard-showing-today-s-screen-time-remaining-allowed-time-progress-bar-visualization-current-streak-count-dynamic-motivational-quote-that-changes-daily-start-focus-session-button-and-join-challenge-button",
+      "title": "Build a home dashboard showing: today's screen time, remaining allowed time, progress bar visualization, current streak count, dynamic motivational quote that changes daily, 'Start Focus Session' button, and 'Join Challenge' button",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-focus-mode-feature-with-timer-options-25-minutes-45-minutes-custom-countdown-animation-warning-popup-if-user-attempts-to-exit-early-and-on-completion-award-points-show-success-animation-and-increase-streak-counter",
+      "title": "Implement a Focus Mode feature with timer options (25 minutes, 45 minutes, Custom), countdown animation, warning popup if user attempts to exit early, and on completion: award points, show success animation, and increase streak counter",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-simple-health-log-feature-mvp-that-allows-a-signed-in-user-to-create-and-view-time-stamped-entries-for-a-small-set-of-daily-metrics-e-g-mood-1-5-sleep-hours-notes-store-per-user-entries-in-the-backend-and-display-them-in-the-dashboard",
-      "title": "Add a simple health log feature (MVP) that allows a signed-in user to create and view time-stamped entries for a small set of daily metrics (e.g., mood 1–5, sleep hours, notes). Store per-user entries in the backend and display them in the dashboard.",
+      "id": "feature-create-a-digital-detox-challenges-system-with-pre-built-challenges-7-day-detox-no-social-media-sunday-2-hours-no-phone-before-sleep-plus-the-ability-to-create-custom-challenges-track-completion-percentage-daily-progress-and-award-bonus-points-on-completion",
+      "title": "Create a Digital Detox Challenges system with pre-built challenges: '7-Day Detox', 'No Social Media Sunday', '2 Hours No Phone Before Sleep', plus the ability to create custom challenges. Track completion percentage, daily progress, and award bonus points on completion",
       "reqIds": [
         "REQ-5"
       ],
       "version": 1
     },
     {
-      "id": "feature-include-a-future-ai-insights-page-section-that-is-explicitly-labeled-as-coming-soon-and-describes-in-english-what-future-ai-features-might-do-without-implementing-any-ai-integration",
-      "title": "Include a “Future AI Insights” page/section that is explicitly labeled as “coming soon” and describes (in English) what future AI features might do, without implementing any AI integration.",
+      "id": "feature-build-a-statistics-analytics-page-with-daily-weekly-and-monthly-charts-showing-screen-time-comparison-focus-hours-tracked-streak-history-and-improvement-percentage-over-time",
+      "title": "Build a Statistics & Analytics page with daily, weekly, and monthly charts showing: screen time comparison, focus hours tracked, streak history, and improvement percentage over time",
       "reqIds": [
         "REQ-6"
       ],
       "version": 1
     },
     {
-      "id": "feature-establish-a-coherent-visual-theme-for-vitasense-colors-typography-spacing-component-styling-appropriate-for-a-health-wellness-product-and-apply-it-consistently-across-landing-auth-dashboard-and-log-flows-avoid-blue-purple-as-the-primary-palette",
-      "title": "Establish a coherent visual theme for VitaSense (colors, typography, spacing, component styling) appropriate for a health/wellness product, and apply it consistently across landing, auth, dashboard, and log flows (avoid blue/purple as the primary palette).",
+      "id": "feature-implement-a-rewards-and-gamification-system-with-a-points-mechanism-level-progression-beginner-consistent-focused-mind-digital-master-unlockable-badges-and-a-visual-progress-tracker-showing-current-level-and-points-to-next-level",
+      "title": "Implement a rewards and gamification system with a points mechanism, level progression (Beginner, Consistent, Focused Mind, Digital Master), unlockable badges, and a visual progress tracker showing current level and points to next level",
       "reqIds": [
         "REQ-7"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-generated-static-brand-assets-for-vitasense-logo-simple-hero-illustration-and-use-them-on-the-landing-page-and-app-header-store-them-as-static-files-and-do-not-serve-them-from-the-backend",
-      "title": "Add generated static brand assets for VitaSense (logo + simple hero illustration) and use them on the landing page and app header. Store them as static files and do not serve them from the backend.",
+      "id": "feature-create-an-ai-smart-assistant-feature-that-analyzes-user-usage-patterns-and-provides-personalized-suggestions-including-best-focus-time-recommendations-detox-tips-app-usage-warnings-and-a-daily-personalized-notification",
+      "title": "Create an AI Smart Assistant feature that analyzes user usage patterns and provides personalized suggestions including: best focus time recommendations, detox tips, app usage warnings, and a daily personalized notification",
       "reqIds": [
         "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-reminder-system-that-alerts-users-when-screen-time-limit-is-approaching-sends-a-gentle-time-to-disconnect-notification-at-night-and-allows-custom-reminder-scheduling",
+      "title": "Build a reminder system that alerts users when screen time limit is approaching, sends a gentle 'Time to disconnect 🌙' notification at night, and allows custom reminder scheduling",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-settings-page-with-options-to-edit-screen-time-limit-change-theme-with-dark-mode-as-default-control-notification-preferences-reset-all-data-and-logout",
+      "title": "Create a Settings page with options to: edit screen time limit, change theme (with Dark Mode as default), control notification preferences, reset all data, and logout",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-visual-design-with-a-calm-blue-and-soft-purple-color-palette-as-the-default-dark-mode-theme-minimalistic-layout-using-soft-rounded-cards-smooth-transitions-and-minimal-animations-throughout-the-app-modern-typography-and-clean-bottom-navigation",
+      "title": "Apply a cohesive visual design with a calm blue and soft purple color palette as the default dark mode theme, minimalistic layout using soft rounded cards, smooth transitions and minimal animations throughout the app, modern typography, and clean bottom navigation",
+      "reqIds": [
+        "REQ-11"
       ],
       "version": 1
     }
@@ -67,21 +99,75 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Create VitaSense app for future AI health-related use cases",
+      "summary": "Onboarding flow with user preferences and goal setting",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Home dashboard with screen time tracking and progress visualization",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Focus Mode with timer, app blocking, and streak rewards",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Implement a basic backend user profile model keyed by the caller principal, with endpoints to create/read/update a profile (name, age range, health goals text, createdAt/updatedAt timestamps).",
+      "summary": "Digital Detox Challenges system with pre-built and custom challenges",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Statistics & Analytics with daily/weekly/monthly charts",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Rewards & Gamification system with points, levels, and badges",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "AI Smart Assistant for usage analysis and personalized suggestions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Reminder system with customizable notifications",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Settings page with theme control and account management",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Firebase Authentication with Email and Google login",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Replace the current health-focused backend with a user management system that stores: uid, name, email, dailyLimit (number), currentScreenTime (number), streak (number), totalPoints (number), level (text), challenges (array), focusSessions (array), and createdAt (timestamp)",
       "reqIds": [
-        "REQ-3"
+        "REQ-1"
       ],
       "status": "pending"
     }
   ],
   "gameProjectType": "none",
-  "projectName": "VitaSense",
+  "projectName": "Digital Detox – Focus & Mind Reset",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

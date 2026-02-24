@@ -1,215 +1,358 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "VitaSense initial frontend (landing, Internet Identity auth, dashboard profile + health log, coming-soon insights, theming, brand assets)",
+  "title": "Digital Detox Mobile App - Frontend Implementation",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Public landing experience for VitaSense with product explanation, sign-in CTA, and non-medical disclaimer.",
-      "acceptanceCriteria": [
-        "Visiting the app shows a landing page branded as “VitaSense”.",
-        "Landing page includes a short description of the app’s goal (future AI health related).",
-        "Landing page includes an explicit non-medical disclaimer in English.",
-        "Landing page includes a sign-in entry point (button/link) even if the user is not signed in."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "create",
-          "description": "Create the top-level VitaSense app shell that renders a public landing section by default (signed-out), including product description + explicit non-medical disclaimer text and a prominent sign-in CTA. Wire navigation between landing and signed-in areas within this component (no changes to immutable frontend/src/main.tsx)."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "create",
-          "description": "Implement the VitaSense landing page content (brand headline, short explanation of the future AI health goal, non-medical disclaimer in English, and a sign-in CTA). Use shadcn-ui components (e.g., Card, Button) for consistent layout and styling—verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/AppHeader.tsx",
-          "operation": "create",
-          "description": "Create a reusable header that displays the VitaSense wordmark/logo and provides a clear sign-in entry point when signed out. Use shadcn-ui components for header actions (e.g., Button)—verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
       "id": "REQ-2",
-      "summary": "Internet Identity sign-in/out with visible signed-in state (principal) in the UI.",
+      "summary": "Create multi-step onboarding flow collecting screen time data, distraction apps, goals, and preferences",
       "acceptanceCriteria": [
-        "User can sign in using Internet Identity.",
-        "After sign-in, the UI displays that the user is signed in (e.g., principal).",
-        "User can sign out and returns to signed-out state."
+        "Multi-step onboarding form with progress indicator",
+        "All fields validated before submission",
+        "Data saved to backend on completion",
+        "Onboarding only shown once per user"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AuthButton.tsx",
+          "path": "frontend/src/components/OnboardingFlow.tsx",
           "operation": "create",
-          "description": "Add an auth button component that uses the existing immutable hook frontend/src/hooks/useInternetIdentity.ts for Internet Identity login/logout. Ensure logout clears cached React Query data (queryClient.clear()) per the authorization component guidance. Use shadcn-ui Button for consistent styling—verify the component's usage instructions before implementing."
+          "description": "Create multi-step onboarding component with steps for: welcome screen with calming animation, average daily screen time input, biggest distraction apps text input, main goal dropdown (Reduce addiction/Improve focus/Sleep better), daily screen time limit input, and preferred focus duration selection. Include progress indicator and form validation. Wire the generated image frontend/public/assets/generated/welcome-hero.dim_800x600.png as the welcome screen background. Use authorization component to ensure authenticated users complete onboarding."
         },
         {
-          "path": "frontend/src/components/SignedInBadge.tsx",
+          "path": "frontend/src/hooks/useOnboarding.ts",
           "operation": "create",
-          "description": "Create a small UI element that shows signed-in state and displays the user principal (string) in the UI (and optionally also the profile name when available). Use shadcn-ui components (e.g., Badge) if available—verify the component's usage instructions before implementing."
+          "description": "Create hook to check if user has completed onboarding (by checking if profile exists with required fields), submit onboarding data by calling saveCallerUserProfile, and manage onboarding state. Use the authorization component's getCallerUserProfile to verify completion status."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wire authentication state into the app shell using the existing immutable hooks (useInternetIdentity + useActor). Show signed-in UI state (principal) and provide sign-out; ensure app content that shows personal data is only visible when authenticated, consistent with the authorization component guidance."
+          "description": "Add onboarding route guard that shows OnboardingFlow component when user is authenticated but hasn't completed onboarding. After onboarding completion, redirect to dashboard. Use the authorization component's authentication state to gate access."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Build home dashboard with screen time tracking, progress visualization, streak counter, motivational quotes, and action buttons",
+      "acceptanceCriteria": [
+        "Dashboard displays real-time screen time data",
+        "Progress bar accurately reflects time used vs. limit",
+        "Motivational quote updates daily",
+        "Buttons navigate to respective features"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Replace health-focused dashboard with Digital Detox dashboard showing: today's screen time (from currentScreenTime), remaining allowed time (dailyLimit - currentScreenTime), progress bar visualization, current streak count, dynamic motivational quote that changes daily, 'Start Focus Session' button linking to focus mode, and 'Join Challenge' button linking to challenges. Fetch user data via getCallerUserProfile from the authorization component."
+        },
+        {
+          "path": "frontend/src/components/ScreenTimeProgress.tsx",
+          "operation": "create",
+          "description": "Create progress bar component that visualizes screen time used vs daily limit with percentage calculation and color-coded states (safe/warning/exceeded). Apply calm blue and soft purple theme colors."
+        },
+        {
+          "path": "frontend/src/components/MotivationalQuote.tsx",
+          "operation": "create",
+          "description": "Create component displaying daily motivational quotes that change based on current date. Include a curated list of mindfulness and digital wellness quotes."
+        },
+        {
+          "path": "frontend/src/components/DashboardStats.tsx",
+          "operation": "create",
+          "description": "Create stats overview component displaying today's screen time, remaining time, and current streak with soft rounded cards and calm color palette."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Signed-in dashboard UI for viewing/editing VitaSense profile and saving via backend actor.",
+      "summary": "Implement Focus Mode with timer options, countdown animation, exit warning, and completion rewards",
       "acceptanceCriteria": [
-        "Signed-in users can open a dashboard page/section.",
-        "Dashboard shows profile fields and allows editing.",
-        "Saving updates persists and reloads correctly (confirmed by refresh).",
-        "Errors from backend are surfaced to the user in English."
+        "Timer displays countdown with visual animation",
+        "Custom timer accepts user input in minutes",
+        "Exit warning appears when attempting early exit",
+        "Completion triggers point award and streak increment",
+        "Success animation plays on session completion"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/DashboardPage.tsx",
+          "path": "frontend/src/pages/FocusModePage.tsx",
           "operation": "create",
-          "description": "Create the signed-in dashboard section/page that fetches the caller profile and renders editable fields for name, age range, and health goals, plus a save action. Ensure backend errors (including authorization traps) are shown to the user in English. Use shadcn-ui form primitives (e.g., Input, Textarea, Select, Button, Card, Alert) for consistent UX—verify the component's usage instructions before implementing."
+          "description": "Create Focus Mode page with timer options (25 min, 45 min, Custom), countdown animation with circular progress indicator, exit warning popup using dialog component, and on completion: call saveFocusSession and addPoints backend capabilities, show success animation using frontend/public/assets/generated/success-celebration.dim_400x400.png, and increment streak. Apply calm blue and soft purple theme."
         },
         {
-          "path": "frontend/src/hooks/useProfile.ts",
+          "path": "frontend/src/components/FocusTimer.tsx",
           "operation": "create",
-          "description": "Implement React Query hooks for profile read/update using the existing immutable useActor hook and backend interface methods (getCallerUserProfile, saveCallerUserProfile). Follow the authorization component guidance to avoid profile-setup flash by aligning query enabled/isFetched state with actor readiness—verify the component's usage instructions before implementing."
+          "description": "Create countdown timer component with circular animated progress ring, minutes:seconds display, pause/resume controls, and smooth transitions. Style with dark mode theme and minimal animations."
+        },
+        {
+          "path": "frontend/src/components/ExitWarningDialog.tsx",
+          "operation": "create",
+          "description": "Create dialog component warning user about exiting focus session early, with options to continue session or exit anyway. Use shadcn/ui Dialog component."
+        },
+        {
+          "path": "frontend/src/components/SuccessAnimation.tsx",
+          "operation": "create",
+          "description": "Create success celebration component displaying the generated image frontend/public/assets/generated/success-celebration.dim_400x400.png with fade-in animation and confetti effect. Show points earned and streak increment."
+        },
+        {
+          "path": "frontend/src/hooks/useFocusSession.ts",
+          "operation": "create",
+          "description": "Create hook managing focus session state, calling saveFocusSession backend capability on completion, awarding points via addPoints, and handling timer logic. Verify the authorization component's usage instructions before implementing authentication checks."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wire the dashboard view into the app navigation. Gate dashboard rendering behind authentication (Internet Identity present) so personal data is not shown to guests, consistent with the authorization component guidance."
+          "description": "Add route for /focus-mode page and wire FocusModePage component into the router. Ensure route is protected by authentication guard."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Health log MVP UI to create and view time-stamped entries (mood, sleep hours, notes) in the dashboard.",
+      "summary": "Create Digital Detox Challenges system with pre-built and custom challenges, progress tracking, and rewards",
       "acceptanceCriteria": [
-        "User can add a new health log entry with mood, sleep hours, and notes.",
-        "Entries are stored per principal and persist across refreshes.",
-        "Dashboard displays a list of entries sorted newest-first.",
-        "User can view at least the last 20 entries (or all if fewer)."
+        "Pre-built challenges available in a list",
+        "Users can join and leave challenges",
+        "Daily progress tracked and displayed",
+        "Completion percentage calculated accurately",
+        "Bonus points awarded on challenge completion",
+        "Custom challenge creation with name, duration, and rules"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useHealthLog.ts",
+          "path": "frontend/src/pages/ChallengesPage.tsx",
           "operation": "create",
-          "description": "Add React Query hooks for reading and creating health log entries using the existing immutable useActor hook and backend interface methods (getHealthLogEntries, createHealthLogEntry). Ensure refresh after creation and present errors in English."
+          "description": "Create Challenges page displaying pre-built challenges (7-Day Detox, No Social Media Sunday, 2 Hours No Phone Before Sleep) and custom challenge option. Show active challenges with completion percentage and daily progress tracking. Allow joining/leaving challenges via createChallenge backend capability. Award bonus points on completion via addPoints."
         },
         {
-          "path": "frontend/src/components/HealthLogComposer.tsx",
+          "path": "frontend/src/components/ChallengeCard.tsx",
           "operation": "create",
-          "description": "Create a dashboard component that allows entry of mood (1–5), sleep hours, and notes and submits to the backend. Use shadcn-ui components (Input, Textarea, Button, Card) for consistent layout—verify the component's usage instructions before implementing."
+          "description": "Create challenge card component showing challenge name, description, progress bar, completion percentage, start/end dates, and join/leave action button. Style with soft rounded cards and calm color palette."
         },
         {
-          "path": "frontend/src/components/HealthLogList.tsx",
+          "path": "frontend/src/components/CustomChallengeDialog.tsx",
           "operation": "create",
-          "description": "Create a component that renders a newest-first list of health log entries, showing at least the last 20 entries (or all if fewer) with readable timestamps. Use shadcn-ui components (Card, Separator, Badge) for styling—verify the component's usage instructions before implementing."
+          "description": "Create dialog for creating custom challenges with fields for name, description, start date, end date, and challenge rules. Submit via createChallenge backend capability. Use shadcn/ui Dialog component."
         },
         {
-          "path": "frontend/src/pages/DashboardPage.tsx",
+          "path": "frontend/src/hooks/useChallenges.ts",
+          "operation": "create",
+          "description": "Create hook to fetch challenges via getChallengeProgress, create challenges via createChallenge, update progress via updateChallengeProgress, and calculate completion percentages. Handle authentication using the authorization component."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Integrate the health log composer and list into the dashboard UI. Ensure list sorting newest-first on the client and show a clear empty state when no entries exist."
+          "description": "Add route for /challenges page and wire ChallengesPage component into the router with authentication guard."
         }
       ]
     },
     {
       "id": "REQ-6",
-      "summary": "Future AI Insights section/page labeled coming soon with static copy and non-medical disclaimer.",
+      "summary": "Build Statistics & Analytics page with daily/weekly/monthly charts for screen time, focus hours, and streak history",
       "acceptanceCriteria": [
-        "There is a visible section/page labeled “Future AI Insights (Coming Soon)”.",
-        "The section contains only static explanatory copy and no external AI/API integration.",
-        "Copy clearly states it is not providing medical advice or diagnosis."
+        "Toggle between daily, weekly, and monthly views",
+        "Charts display screen time trends",
+        "Focus hours aggregated and visualized",
+        "Streak history shown with dates",
+        "Improvement percentage calculated from baseline"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/FutureAiInsightsPage.tsx",
+          "path": "frontend/src/pages/StatisticsPage.tsx",
           "operation": "create",
-          "description": "Create a static “Future AI Insights (Coming Soon)” page/section that describes potential future features in English, explicitly stating it does not provide medical advice or diagnosis and includes no AI or external API integration. Use shadcn-ui components (Card, Typography/prose styles) for readable formatting—verify the component's usage instructions before implementing."
+          "description": "Create Statistics & Analytics page with view toggle (daily/weekly/monthly), charts for screen time comparison, focus hours tracked via getFocusSessions, streak history, and improvement percentage over time. Use chart library compatible with React and Tailwind."
+        },
+        {
+          "path": "frontend/src/components/ScreenTimeChart.tsx",
+          "operation": "create",
+          "description": "Create chart component visualizing screen time trends over selected time period with line or bar chart. Style with calm blue and soft purple theme."
+        },
+        {
+          "path": "frontend/src/components/FocusHoursChart.tsx",
+          "operation": "create",
+          "description": "Create chart component showing focus session hours aggregated by day/week/month using data from getFocusSessions backend capability."
+        },
+        {
+          "path": "frontend/src/components/StreakHistory.tsx",
+          "operation": "create",
+          "description": "Create component displaying streak history with dates and visual streak calendar. Show current streak prominently."
+        },
+        {
+          "path": "frontend/src/hooks/useStatistics.ts",
+          "operation": "create",
+          "description": "Create hook to aggregate and calculate statistics from user profile data, focus sessions, and screen time history. Handle date range filtering for daily/weekly/monthly views."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wire the Future AI Insights page/section into the app navigation (reachable from header/nav in both signed-out and signed-in states, as appropriate) without creating additional unrequested top-level pages beyond this requirement."
-        },
-        {
-          "path": "frontend/src/components/AppHeader.tsx",
-          "operation": "modify",
-          "description": "Add a navigation entry to “Future AI Insights (Coming Soon)”. Use shadcn-ui navigation primitives if present—verify the component's usage instructions before implementing."
+          "description": "Add route for /statistics page and wire StatisticsPage component into the router with authentication guard."
         }
       ]
     },
     {
       "id": "REQ-7",
-      "summary": "Cohesive VitaSense wellness theme (non-blue/purple primary palette) applied across landing, auth, dashboard, and log flows.",
+      "summary": "Implement rewards and gamification with points, level progression, badges, and visual progress tracker",
       "acceptanceCriteria": [
-        "App uses a consistent theme across pages (buttons, cards, headings, spacing).",
-        "Primary color palette is not predominantly blue/purple.",
-        "UI looks intentionally branded (not default-styled) while remaining readable and accessible."
+        "Points awarded for completing focus sessions and challenges",
+        "Level thresholds defined for each tier",
+        "Badges unlock based on achievements",
+        "Progress tracker shows current level and next milestone",
+        "Level-up animation displays on progression"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/components/LevelProgressTracker.tsx",
           "operation": "create",
-          "description": "Define VitaSense global theme tokens and base styles (Tailwind + shadcn variable system) with a warm wellness palette (avoid blue/purple as primary), consistent typography, and spacing defaults. Ensure accessible contrast for text and interactive elements."
+          "description": "Create visual progress tracker showing current level (Beginner/Consistent/Focused Mind/Digital Master), total points, and progress bar to next level. Display level-up animation when progression occurs using frontend/public/assets/generated/success-celebration.dim_400x400.png."
         },
         {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Adjust Tailwind theme extension as needed to support VitaSense branding (e.g., semantic color tokens mapped to CSS variables, consistent radii/shadows) while keeping the primary palette non-blue/purple."
+          "path": "frontend/src/components/BadgeCollection.tsx",
+          "operation": "create",
+          "description": "Create badge collection component displaying unlocked and locked badges with achievement criteria. Style with soft rounded cards and calm color palette."
         },
         {
-          "path": "frontend/src/components/AppHeader.tsx",
-          "operation": "modify",
-          "description": "Apply consistent themed styling to the header (background, borders, spacing, typography) using Tailwind utility classes and shadcn-ui components—verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/RewardsPage.tsx",
+          "operation": "create",
+          "description": "Create Rewards page showing LevelProgressTracker, BadgeCollection, points history, and gamification overview. Fetch user level and totalPoints from getCallerUserProfile."
         },
         {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Apply VitaSense theme styling consistently to landing (hero layout, cards, CTA button styling, typography). Use shadcn-ui components where appropriate—verify the component's usage instructions before implementing."
+          "path": "frontend/src/utils/gamification.ts",
+          "operation": "create",
+          "description": "Create utility functions for level thresholds, badge unlock logic, points calculation for different activities, and level progression checks."
         },
         {
-          "path": "frontend/src/pages/DashboardPage.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Apply VitaSense theme styling consistently to dashboard/profile and health log sections using shared layout patterns (cards, headings, spacing). Use shadcn-ui components where appropriate—verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/FutureAiInsightsPage.tsx",
-          "operation": "modify",
-          "description": "Apply VitaSense theme styling to the Future AI Insights page/section for consistency (headings, prose, spacing). Use shadcn-ui components where appropriate—verify the component's usage instructions before implementing."
+          "description": "Add route for /rewards page and wire RewardsPage component into the router with authentication guard."
         }
       ]
     },
     {
       "id": "REQ-8",
-      "summary": "Add generated static VitaSense brand assets (logo + hero illustration) and use them in landing and header without backend serving.",
+      "summary": "Create AI Smart Assistant providing personalized suggestions based on usage patterns",
       "acceptanceCriteria": [
-        "Logo and hero illustration exist as static assets under frontend/public/assets/generated.",
-        "Landing page displays the hero illustration and VitaSense logo.",
-        "App header/nav displays the logo in a compact form."
+        "AI suggestions based on historical usage data",
+        "Recommendations update daily",
+        "Tips displayed in a dedicated assistant section",
+        "Notifications sent at optimal times based on user patterns"
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/generated/vitasense-logo.dim_512x512.png",
+          "path": "frontend/src/pages/AssistantPage.tsx",
           "operation": "create",
-          "description": "Add the generated VitaSense wordmark logo asset as a static file at frontend/public/assets/generated/vitasense-logo.dim_512x512.png."
+          "description": "Create AI Smart Assistant page analyzing user patterns from focus sessions and screen time to provide personalized suggestions including: best focus time recommendations, detox tips, app usage warnings, and daily personalized insights. Use local analysis of user data fetched via getCallerUserProfile and getFocusSessions."
         },
         {
-          "path": "frontend/public/assets/generated/vitasense-hero.dim_1600x900.png",
+          "path": "frontend/src/components/AiSuggestions.tsx",
           "operation": "create",
-          "description": "Add the generated VitaSense hero illustration asset as a static file at frontend/public/assets/generated/vitasense-hero.dim_1600x900.png."
+          "description": "Create component displaying personalized AI suggestions in card format with icons, categorized by type (focus time, detox tips, warnings). Style with soft rounded cards and calm color palette."
         },
         {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/utils/aiAnalysis.ts",
+          "operation": "create",
+          "description": "Create utility functions to analyze user patterns (best focus times based on completed sessions, usage warnings based on screen time trends, personalized detox tips based on goals) using client-side logic."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Render the static brand assets on the landing page: display the hero illustration from frontend/public/assets/generated/vitasense-hero.dim_1600x900.png and the logo from frontend/public/assets/generated/vitasense-logo.dim_512x512.png. Use shadcn-ui layout components as needed—verify the component's usage instructions before implementing."
+          "description": "Add route for /assistant page and wire AssistantPage component into the router with authentication guard."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Build reminder system for screen time limits, nighttime disconnect, and custom scheduling",
+      "acceptanceCriteria": [
+        "Notification triggers at 80% of daily limit",
+        "Nighttime reminder sent at user-configured time",
+        "Custom reminders can be added with time and message",
+        "Reminder preferences saved to user profile"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ReminderSettings.tsx",
+          "operation": "create",
+          "description": "Create reminder configuration component for setting nighttime disconnect time, enabling/disabling screen time limit warnings (at 80% threshold), and adding custom reminders with time and message. Store preferences in local storage since real-time push notifications are not supported."
+        },
+        {
+          "path": "frontend/src/hooks/useReminders.ts",
+          "operation": "create",
+          "description": "Create hook managing reminder scheduling logic, checking current screen time against daily limit to trigger 80% warning, scheduling nighttime reminders, and handling custom reminder timers using browser Notification API with user permission."
+        },
+        {
+          "path": "frontend/src/utils/notifications.ts",
+          "operation": "create",
+          "description": "Create utility functions for browser notification permission handling, notification display with calm messaging (e.g., 'Time to disconnect 🌙'), and reminder scheduling logic."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Create Settings page with screen time limit editing, theme control, notifications, data reset, and logout",
+      "acceptanceCriteria": [
+        "Screen limit editable with validation",
+        "Theme toggle switches between light and dark modes",
+        "Notification settings persist across sessions",
+        "Data reset confirms before clearing all user data",
+        "Logout clears session and returns to landing page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/SettingsPage.tsx",
+          "operation": "create",
+          "description": "Create Settings page with sections for: editing daily screen time limit (with validation), theme toggle (dark mode default), notification preferences using ReminderSettings component, data reset button with confirmation dialog, and logout button. Update profile via saveCallerUserProfile and use authorization component's clear function for logout."
+        },
+        {
+          "path": "frontend/src/components/DataResetDialog.tsx",
+          "operation": "create",
+          "description": "Create confirmation dialog for data reset warning user about permanent deletion. On confirm, clear all user data by calling saveCallerUserProfile with reset values. Use shadcn/ui Dialog component."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /settings page and wire SettingsPage component into the router with authentication guard."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Apply cohesive visual design with calm blue/purple dark mode theme, minimalistic layout, smooth animations, and clean navigation",
+      "acceptanceCriteria": [
+        "Dark mode is the default theme",
+        "Blue and purple accent colors used consistently",
+        "All cards have rounded corners",
+        "Transitions animate smoothly between states",
+        "Typography is clear and modern",
+        "Bottom navigation provides quick access to main sections"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Update global styles to use calm blue and soft purple color palette as default dark mode theme. Define OKLCH color tokens for primary blues, accent purples, and neutral grays. Set dark mode as default theme. Add smooth transition utilities and rounded card styles."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Configure Tailwind with custom calm blue and soft purple colors, default dark mode, modern typography stack, rounded corners (xl/2xl), smooth transition timings, and minimal animation utilities."
+        },
+        {
+          "path": "frontend/src/components/BottomNavigation.tsx",
+          "operation": "create",
+          "description": "Create clean bottom navigation bar with icons and labels for main sections: Dashboard, Focus, Challenges, Statistics, and Settings. Style with calm color palette, smooth transitions, and active state indicators. Apply soft rounded design."
         },
         {
           "path": "frontend/src/components/AppHeader.tsx",
           "operation": "modify",
-          "description": "Display the logo in compact form in the app header/nav using the static asset frontend/public/assets/generated/vitasense-logo.dim_512x512.png. Use shadcn-ui components for consistent sizing/alignment—verify the component's usage instructions before implementing."
+          "description": "Update header to use the generated app icon frontend/public/assets/generated/app-icon.dim_512x512.png as logo, apply calm blue and purple theme colors, and ensure minimal design with smooth transitions. Replace existing health-focused branding."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire BottomNavigation component into the app layout for authenticated users. Ensure it appears on all main pages (Dashboard, Focus, Challenges, Statistics, Settings) but not on onboarding or landing page."
+        },
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Update landing page to feature Digital Detox app with hero section using frontend/public/assets/generated/welcome-hero.dim_800x600.png, calm blue and purple theme, feature highlights (focus tracking, challenges, gamification), and navigation to dashboard. Replace existing health-focused content."
         }
       ]
     }

@@ -2,33 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-the-initial-vitasense-frontend-with-a-public-landing-page-that-explains-the-product-future-ai-health-related-app-includes-a-clear-call-to-action-to-sign-in-and-shows-a-brief-disclaimer-that-the-app-is-not-medical-advice",
-      "featureTitle": "Create the initial VitaSense frontend with a public landing page that explains the product (future AI health-related app), includes a clear call-to-action to sign in, and shows a brief disclaimer that the app is not medical advice.",
+      "featureId": "feature-create-an-onboarding-flow-with-a-welcome-screen-that-collects-average-daily-screen-time-biggest-distraction-apps-text-input-main-goal-dropdown-with-options-reduce-addiction-improve-focus-sleep-better-daily-screen-time-limit-and-preferred-focus-duration",
+      "featureTitle": "Create an onboarding flow with a welcome screen that collects: average daily screen time, biggest distraction apps (text input), main goal (dropdown with options: Reduce addiction, Improve focus, Sleep better), daily screen time limit, and preferred focus duration",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/pages/LandingPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-internet-identity-sign-in-to-the-vitasense-app-and-display-signed-in-state-principal-in-the-ui-with-sign-out-support",
-      "featureTitle": "Add Internet Identity sign-in to the VitaSense app and display signed-in state (principal) in the UI, with sign-out support.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/AuthButton.tsx",
-        "frontend/src/components/SignedInBadge.tsx"
+        "frontend/src/components/OnboardingFlow.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -44,12 +22,36 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-signed-in-dashboard-ui-that-lets-the-user-view-and-edit-their-vitasense-profile-name-age-range-health-goals-and-saves-it-via-the-backend",
-      "featureTitle": "Create a signed-in dashboard UI that lets the user view and edit their VitaSense profile (name, age range, health goals) and saves it via the backend.",
+      "featureId": "feature-build-a-home-dashboard-showing-today-s-screen-time-remaining-allowed-time-progress-bar-visualization-current-streak-count-dynamic-motivational-quote-that-changes-daily-start-focus-session-button-and-join-challenge-button",
+      "featureTitle": "Build a home dashboard showing: today's screen time, remaining allowed time, progress bar visualization, current streak count, dynamic motivational quote that changes daily, 'Start Focus Session' button, and 'Join Challenge' button",
+      "files": [
+        "frontend/src/components/DashboardStats.tsx",
+        "frontend/src/components/MotivationalQuote.tsx",
+        "frontend/src/components/ScreenTimeProgress.tsx",
+        "frontend/src/pages/DashboardPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-focus-mode-feature-with-timer-options-25-minutes-45-minutes-custom-countdown-animation-warning-popup-if-user-attempts-to-exit-early-and-on-completion-award-points-show-success-animation-and-increase-streak-counter",
+      "featureTitle": "Implement a Focus Mode feature with timer options (25 minutes, 45 minutes, Custom), countdown animation, warning popup if user attempts to exit early, and on completion: award points, show success animation, and increase streak counter",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/hooks/useProfile.ts",
-        "frontend/src/pages/DashboardPage.tsx"
+        "frontend/src/components/ExitWarningDialog.tsx",
+        "frontend/src/components/FocusTimer.tsx",
+        "frontend/src/components/SuccessAnimation.tsx",
+        "frontend/src/pages/FocusModePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -65,13 +67,13 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-simple-health-log-feature-mvp-that-allows-a-signed-in-user-to-create-and-view-time-stamped-entries-for-a-small-set-of-daily-metrics-e-g-mood-1-5-sleep-hours-notes-store-per-user-entries-in-the-backend-and-display-them-in-the-dashboard",
-      "featureTitle": "Add a simple health log feature (MVP) that allows a signed-in user to create and view time-stamped entries for a small set of daily metrics (e.g., mood 1–5, sleep hours, notes). Store per-user entries in the backend and display them in the dashboard.",
+      "featureId": "feature-create-a-digital-detox-challenges-system-with-pre-built-challenges-7-day-detox-no-social-media-sunday-2-hours-no-phone-before-sleep-plus-the-ability-to-create-custom-challenges-track-completion-percentage-daily-progress-and-award-bonus-points-on-completion",
+      "featureTitle": "Create a Digital Detox Challenges system with pre-built challenges: '7-Day Detox', 'No Social Media Sunday', '2 Hours No Phone Before Sleep', plus the ability to create custom challenges. Track completion percentage, daily progress, and award bonus points on completion",
       "files": [
-        "frontend/src/components/HealthLogComposer.tsx",
-        "frontend/src/components/HealthLogList.tsx",
-        "frontend/src/hooks/useHealthLog.ts",
-        "frontend/src/pages/DashboardPage.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/ChallengeCard.tsx",
+        "frontend/src/components/CustomChallengeDialog.tsx",
+        "frontend/src/pages/ChallengesPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -87,12 +89,14 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-include-a-future-ai-insights-page-section-that-is-explicitly-labeled-as-coming-soon-and-describes-in-english-what-future-ai-features-might-do-without-implementing-any-ai-integration",
-      "featureTitle": "Include a “Future AI Insights” page/section that is explicitly labeled as “coming soon” and describes (in English) what future AI features might do, without implementing any AI integration.",
+      "featureId": "feature-build-a-statistics-analytics-page-with-daily-weekly-and-monthly-charts-showing-screen-time-comparison-focus-hours-tracked-streak-history-and-improvement-percentage-over-time",
+      "featureTitle": "Build a Statistics & Analytics page with daily, weekly, and monthly charts showing: screen time comparison, focus hours tracked, streak history, and improvement percentage over time",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/pages/FutureAiInsightsPage.tsx"
+        "frontend/src/components/FocusHoursChart.tsx",
+        "frontend/src/components/ScreenTimeChart.tsx",
+        "frontend/src/components/StreakHistory.tsx",
+        "frontend/src/pages/StatisticsPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -108,15 +112,14 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-establish-a-coherent-visual-theme-for-vitasense-colors-typography-spacing-component-styling-appropriate-for-a-health-wellness-product-and-apply-it-consistently-across-landing-auth-dashboard-and-log-flows-avoid-blue-purple-as-the-primary-palette",
-      "featureTitle": "Establish a coherent visual theme for VitaSense (colors, typography, spacing, component styling) appropriate for a health/wellness product, and apply it consistently across landing, auth, dashboard, and log flows (avoid blue/purple as the primary palette).",
+      "featureId": "feature-implement-a-rewards-and-gamification-system-with-a-points-mechanism-level-progression-beginner-consistent-focused-mind-digital-master-unlockable-badges-and-a-visual-progress-tracker-showing-current-level-and-points-to-next-level",
+      "featureTitle": "Implement a rewards and gamification system with a points mechanism, level progression (Beginner, Consistent, Focused Mind, Digital Master), unlockable badges, and a visual progress tracker showing current level and points to next level",
       "files": [
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/index.css",
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/pages/FutureAiInsightsPage.tsx",
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/tailwind.config.js"
+        "frontend/src/App.tsx",
+        "frontend/src/components/BadgeCollection.tsx",
+        "frontend/src/components/LevelProgressTracker.tsx",
+        "frontend/src/pages/RewardsPage.tsx",
+        "frontend/src/utils/gamification.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -132,11 +135,13 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-generated-static-brand-assets-for-vitasense-logo-simple-hero-illustration-and-use-them-on-the-landing-page-and-app-header-store-them-as-static-files-and-do-not-serve-them-from-the-backend",
-      "featureTitle": "Add generated static brand assets for VitaSense (logo + simple hero illustration) and use them on the landing page and app header. Store them as static files and do not serve them from the backend.",
+      "featureId": "feature-create-an-ai-smart-assistant-feature-that-analyzes-user-usage-patterns-and-provides-personalized-suggestions-including-best-focus-time-recommendations-detox-tips-app-usage-warnings-and-a-daily-personalized-notification",
+      "featureTitle": "Create an AI Smart Assistant feature that analyzes user usage patterns and provides personalized suggestions including: best focus time recommendations, detox tips, app usage warnings, and a daily personalized notification",
       "files": [
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/pages/LandingPage.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/AiSuggestions.tsx",
+        "frontend/src/pages/AssistantPage.tsx",
+        "frontend/src/utils/aiAnalysis.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -148,6 +153,70 @@
       ],
       "testIds": [
         "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-build-a-reminder-system-that-alerts-users-when-screen-time-limit-is-approaching-sends-a-gentle-time-to-disconnect-notification-at-night-and-allows-custom-reminder-scheduling",
+      "featureTitle": "Build a reminder system that alerts users when screen time limit is approaching, sends a gentle 'Time to disconnect 🌙' notification at night, and allows custom reminder scheduling",
+      "files": [
+        "frontend/src/components/ReminderSettings.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-settings-page-with-options-to-edit-screen-time-limit-change-theme-with-dark-mode-as-default-control-notification-preferences-reset-all-data-and-logout",
+      "featureTitle": "Create a Settings page with options to: edit screen time limit, change theme (with Dark Mode as default), control notification preferences, reset all data, and logout",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/DataResetDialog.tsx",
+        "frontend/src/pages/SettingsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-a-cohesive-visual-design-with-a-calm-blue-and-soft-purple-color-palette-as-the-default-dark-mode-theme-minimalistic-layout-using-soft-rounded-cards-smooth-transitions-and-minimal-animations-throughout-the-app-modern-typography-and-clean-bottom-navigation",
+      "featureTitle": "Apply a cohesive visual design with a calm blue and soft purple color palette as the default dark mode theme, minimalistic layout using soft rounded cards, smooth transitions and minimal animations throughout the app, modern typography, and clean bottom navigation",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/components/BottomNavigation.tsx",
+        "frontend/src/index.css",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
       ],
       "confidence": "high"
     }

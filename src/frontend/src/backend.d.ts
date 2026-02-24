@@ -8,27 +8,37 @@ export interface None {
 }
 export type Option<T> = Some<T> | None;
 export type Time = bigint;
-export interface UserProfile {
-    ageRange: AgeRange;
+export interface FocusSession {
+    sessionDate: Time;
+    durationMinutes: bigint;
+}
+export interface DigitalDetoxUser {
+    streak: bigint;
+    focusSessions: Array<FocusSession>;
     name: string;
     createdAt: Time;
-    updatedAt: Time;
-    healthGoals: string;
+    callerUid: Principal;
+    email: string;
+    level: Level;
+    dailyLimit: bigint;
+    currentScreenTime: bigint;
+    totalPoints: bigint;
+    challenges: Array<Challenge>;
 }
-export interface HealthLogEntry {
-    mood: number;
-    notes: string;
-    timestamp: Time;
-    sleepHours: number;
+export interface Challenge {
+    id: bigint;
+    endDate: Time;
+    name: string;
+    completed: boolean;
+    description: string;
+    progress: bigint;
+    startDate: Time;
 }
-export enum AgeRange {
-    _45to54 = "_45to54",
-    _75plus = "_75plus",
-    _25to34 = "_25to34",
-    _55to64 = "_55to64",
-    _18to24 = "_18to24",
-    _35to44 = "_35to44",
-    _65to74 = "_65to74"
+export enum Level {
+    beginner = "beginner",
+    focusedMind = "focusedMind",
+    consistent = "consistent",
+    digitalMaster = "digitalMaster"
 }
 export enum UserRole {
     admin = "admin",
@@ -36,12 +46,17 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    addPoints(points: bigint): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createHealthLogEntry(mood: number, sleepHours: number, notes: string): Promise<void>;
-    getCallerUserProfile(): Promise<UserProfile | null>;
+    createChallenge(name: string, description: string, startDate: Time, endDate: Time): Promise<void>;
+    getAllUserProfiles(): Promise<Array<[Principal, DigitalDetoxUser]>>;
+    getCallerUserProfile(): Promise<DigitalDetoxUser | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getHealthLogEntries(): Promise<Array<HealthLogEntry>>;
-    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    getChallengeProgress(): Promise<Array<Challenge>>;
+    getFocusSessions(): Promise<Array<FocusSession>>;
+    getUserProfile(user: Principal): Promise<DigitalDetoxUser | null>;
     isCallerAdmin(): Promise<boolean>;
-    saveCallerUserProfile(name: string, ageRange: AgeRange, healthGoals: string): Promise<void>;
+    saveCallerUserProfile(profile: DigitalDetoxUser): Promise<void>;
+    saveFocusSession(durationMinutes: bigint): Promise<void>;
+    updateChallengeProgress(challengeId: bigint, progress: bigint): Promise<void>;
 }

@@ -90,27 +90,37 @@ export class ExternalBlob {
     }
 }
 export type Time = bigint;
-export interface UserProfile {
-    ageRange: AgeRange;
+export interface FocusSession {
+    sessionDate: Time;
+    durationMinutes: bigint;
+}
+export interface DigitalDetoxUser {
+    streak: bigint;
+    focusSessions: Array<FocusSession>;
     name: string;
     createdAt: Time;
-    updatedAt: Time;
-    healthGoals: string;
+    callerUid: Principal;
+    email: string;
+    level: Level;
+    dailyLimit: bigint;
+    currentScreenTime: bigint;
+    totalPoints: bigint;
+    challenges: Array<Challenge>;
 }
-export interface HealthLogEntry {
-    mood: number;
-    notes: string;
-    timestamp: Time;
-    sleepHours: number;
+export interface Challenge {
+    id: bigint;
+    endDate: Time;
+    name: string;
+    completed: boolean;
+    description: string;
+    progress: bigint;
+    startDate: Time;
 }
-export enum AgeRange {
-    _45to54 = "_45to54",
-    _75plus = "_75plus",
-    _25to34 = "_25to34",
-    _55to64 = "_55to64",
-    _18to24 = "_18to24",
-    _35to44 = "_35to44",
-    _65to74 = "_65to74"
+export enum Level {
+    beginner = "beginner",
+    focusedMind = "focusedMind",
+    consistent = "consistent",
+    digitalMaster = "digitalMaster"
 }
 export enum UserRole {
     admin = "admin",
@@ -119,16 +129,21 @@ export enum UserRole {
 }
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
+    addPoints(points: bigint): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    createHealthLogEntry(mood: number, sleepHours: number, notes: string): Promise<void>;
-    getCallerUserProfile(): Promise<UserProfile | null>;
+    createChallenge(name: string, description: string, startDate: Time, endDate: Time): Promise<void>;
+    getAllUserProfiles(): Promise<Array<[Principal, DigitalDetoxUser]>>;
+    getCallerUserProfile(): Promise<DigitalDetoxUser | null>;
     getCallerUserRole(): Promise<UserRole>;
-    getHealthLogEntries(): Promise<Array<HealthLogEntry>>;
-    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    getChallengeProgress(): Promise<Array<Challenge>>;
+    getFocusSessions(): Promise<Array<FocusSession>>;
+    getUserProfile(user: Principal): Promise<DigitalDetoxUser | null>;
     isCallerAdmin(): Promise<boolean>;
-    saveCallerUserProfile(name: string, ageRange: AgeRange, healthGoals: string): Promise<void>;
+    saveCallerUserProfile(profile: DigitalDetoxUser): Promise<void>;
+    saveFocusSession(durationMinutes: bigint): Promise<void>;
+    updateChallengeProgress(challengeId: bigint, progress: bigint): Promise<void>;
 }
-import type { AgeRange as _AgeRange, Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { Challenge as _Challenge, DigitalDetoxUser as _DigitalDetoxUser, FocusSession as _FocusSession, Level as _Level, Time as _Time, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -142,6 +157,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor._initializeAccessControlWithSecret(arg0);
+            return result;
+        }
+    }
+    async addPoints(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addPoints(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addPoints(arg0);
             return result;
         }
     }
@@ -159,74 +188,102 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async createHealthLogEntry(arg0: number, arg1: number, arg2: string): Promise<void> {
+    async createChallenge(arg0: string, arg1: string, arg2: Time, arg3: Time): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.createHealthLogEntry(arg0, arg1, arg2);
+                const result = await this.actor.createChallenge(arg0, arg1, arg2, arg3);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.createHealthLogEntry(arg0, arg1, arg2);
+            const result = await this.actor.createChallenge(arg0, arg1, arg2, arg3);
             return result;
         }
     }
-    async getCallerUserProfile(): Promise<UserProfile | null> {
+    async getAllUserProfiles(): Promise<Array<[Principal, DigitalDetoxUser]>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllUserProfiles();
+                return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllUserProfiles();
+            return from_candid_vec_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getCallerUserProfile(): Promise<DigitalDetoxUser | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserProfile();
-                return from_candid_opt_n3(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserProfile();
-            return from_candid_opt_n3(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
         }
     }
     async getCallerUserRole(): Promise<UserRole> {
         if (this.processError) {
             try {
                 const result = await this.actor.getCallerUserRole();
-                return from_candid_UserRole_n8(this._uploadFile, this._downloadFile, result);
+                return from_candid_UserRole_n10(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getCallerUserRole();
-            return from_candid_UserRole_n8(this._uploadFile, this._downloadFile, result);
+            return from_candid_UserRole_n10(this._uploadFile, this._downloadFile, result);
         }
     }
-    async getHealthLogEntries(): Promise<Array<HealthLogEntry>> {
+    async getChallengeProgress(): Promise<Array<Challenge>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getHealthLogEntries();
+                const result = await this.actor.getChallengeProgress();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getHealthLogEntries();
+            const result = await this.actor.getChallengeProgress();
             return result;
         }
     }
-    async getUserProfile(arg0: Principal): Promise<UserProfile | null> {
+    async getFocusSessions(): Promise<Array<FocusSession>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getFocusSessions();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getFocusSessions();
+            return result;
+        }
+    }
+    async getUserProfile(arg0: Principal): Promise<DigitalDetoxUser | null> {
         if (this.processError) {
             try {
                 const result = await this.actor.getUserProfile(arg0);
-                return from_candid_opt_n3(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getUserProfile(arg0);
-            return from_candid_opt_n3(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n9(this._uploadFile, this._downloadFile, result);
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -243,72 +300,107 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async saveCallerUserProfile(arg0: string, arg1: AgeRange, arg2: string): Promise<void> {
+    async saveCallerUserProfile(arg0: DigitalDetoxUser): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveCallerUserProfile(arg0, to_candid_AgeRange_n10(this._uploadFile, this._downloadFile, arg1), arg2);
+                const result = await this.actor.saveCallerUserProfile(to_candid_DigitalDetoxUser_n12(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveCallerUserProfile(arg0, to_candid_AgeRange_n10(this._uploadFile, this._downloadFile, arg1), arg2);
+            const result = await this.actor.saveCallerUserProfile(to_candid_DigitalDetoxUser_n12(this._uploadFile, this._downloadFile, arg0));
+            return result;
+        }
+    }
+    async saveFocusSession(arg0: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveFocusSession(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveFocusSession(arg0);
+            return result;
+        }
+    }
+    async updateChallengeProgress(arg0: bigint, arg1: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateChallengeProgress(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateChallengeProgress(arg0, arg1);
             return result;
         }
     }
 }
-function from_candid_AgeRange_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _AgeRange): AgeRange {
-    return from_candid_variant_n7(_uploadFile, _downloadFile, value);
+function from_candid_DigitalDetoxUser_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _DigitalDetoxUser): DigitalDetoxUser {
+    return from_candid_record_n6(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserProfile_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserProfile): UserProfile {
-    return from_candid_record_n5(_uploadFile, _downloadFile, value);
+function from_candid_Level_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Level): Level {
+    return from_candid_variant_n8(_uploadFile, _downloadFile, value);
 }
-function from_candid_UserRole_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
-    return from_candid_variant_n9(_uploadFile, _downloadFile, value);
+function from_candid_UserRole_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
+    return from_candid_variant_n11(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
-    return value.length === 0 ? null : from_candid_UserProfile_n4(_uploadFile, _downloadFile, value[0]);
+function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_DigitalDetoxUser]): DigitalDetoxUser | null {
+    return value.length === 0 ? null : from_candid_DigitalDetoxUser_n5(_uploadFile, _downloadFile, value[0]);
 }
-function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    ageRange: _AgeRange;
+function from_candid_record_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    streak: bigint;
+    focusSessions: Array<_FocusSession>;
     name: string;
     createdAt: _Time;
-    updatedAt: _Time;
-    healthGoals: string;
+    callerUid: Principal;
+    email: string;
+    level: _Level;
+    dailyLimit: bigint;
+    currentScreenTime: bigint;
+    totalPoints: bigint;
+    challenges: Array<_Challenge>;
 }): {
-    ageRange: AgeRange;
+    streak: bigint;
+    focusSessions: Array<FocusSession>;
     name: string;
     createdAt: Time;
-    updatedAt: Time;
-    healthGoals: string;
+    callerUid: Principal;
+    email: string;
+    level: Level;
+    dailyLimit: bigint;
+    currentScreenTime: bigint;
+    totalPoints: bigint;
+    challenges: Array<Challenge>;
 } {
     return {
-        ageRange: from_candid_AgeRange_n6(_uploadFile, _downloadFile, value.ageRange),
+        streak: value.streak,
+        focusSessions: value.focusSessions,
         name: value.name,
         createdAt: value.createdAt,
-        updatedAt: value.updatedAt,
-        healthGoals: value.healthGoals
+        callerUid: value.callerUid,
+        email: value.email,
+        level: from_candid_Level_n7(_uploadFile, _downloadFile, value.level),
+        dailyLimit: value.dailyLimit,
+        currentScreenTime: value.currentScreenTime,
+        totalPoints: value.totalPoints,
+        challenges: value.challenges
     };
 }
-function from_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    _45to54: null;
-} | {
-    _75plus: null;
-} | {
-    _25to34: null;
-} | {
-    _55to64: null;
-} | {
-    _18to24: null;
-} | {
-    _35to44: null;
-} | {
-    _65to74: null;
-}): AgeRange {
-    return "_45to54" in value ? AgeRange._45to54 : "_75plus" in value ? AgeRange._75plus : "_25to34" in value ? AgeRange._25to34 : "_55to64" in value ? AgeRange._55to64 : "_18to24" in value ? AgeRange._18to24 : "_35to44" in value ? AgeRange._35to44 : "_65to74" in value ? AgeRange._65to74 : value;
+function from_candid_tuple_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [Principal, _DigitalDetoxUser]): [Principal, DigitalDetoxUser] {
+    return [
+        value[0],
+        from_candid_DigitalDetoxUser_n5(_uploadFile, _downloadFile, value[1])
+    ];
 }
-function from_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     admin: null;
 } | {
     user: null;
@@ -317,41 +409,85 @@ function from_candid_variant_n9(_uploadFile: (file: ExternalBlob) => Promise<Uin
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function to_candid_AgeRange_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: AgeRange): _AgeRange {
-    return to_candid_variant_n11(_uploadFile, _downloadFile, value);
+function from_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    beginner: null;
+} | {
+    focusedMind: null;
+} | {
+    consistent: null;
+} | {
+    digitalMaster: null;
+}): Level {
+    return "beginner" in value ? Level.beginner : "focusedMind" in value ? Level.focusedMind : "consistent" in value ? Level.consistent : "digitalMaster" in value ? Level.digitalMaster : value;
+}
+function from_candid_vec_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Array<[Principal, _DigitalDetoxUser]>): Array<[Principal, DigitalDetoxUser]> {
+    return value.map((x)=>from_candid_tuple_n4(_uploadFile, _downloadFile, x));
+}
+function to_candid_DigitalDetoxUser_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: DigitalDetoxUser): _DigitalDetoxUser {
+    return to_candid_record_n13(_uploadFile, _downloadFile, value);
+}
+function to_candid_Level_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Level): _Level {
+    return to_candid_variant_n15(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
-function to_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: AgeRange): {
-    _45to54: null;
-} | {
-    _75plus: null;
-} | {
-    _25to34: null;
-} | {
-    _55to64: null;
-} | {
-    _18to24: null;
-} | {
-    _35to44: null;
-} | {
-    _65to74: null;
+function to_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    streak: bigint;
+    focusSessions: Array<FocusSession>;
+    name: string;
+    createdAt: Time;
+    callerUid: Principal;
+    email: string;
+    level: Level;
+    dailyLimit: bigint;
+    currentScreenTime: bigint;
+    totalPoints: bigint;
+    challenges: Array<Challenge>;
+}): {
+    streak: bigint;
+    focusSessions: Array<_FocusSession>;
+    name: string;
+    createdAt: _Time;
+    callerUid: Principal;
+    email: string;
+    level: _Level;
+    dailyLimit: bigint;
+    currentScreenTime: bigint;
+    totalPoints: bigint;
+    challenges: Array<_Challenge>;
 } {
-    return value == AgeRange._45to54 ? {
-        _45to54: null
-    } : value == AgeRange._75plus ? {
-        _75plus: null
-    } : value == AgeRange._25to34 ? {
-        _25to34: null
-    } : value == AgeRange._55to64 ? {
-        _55to64: null
-    } : value == AgeRange._18to24 ? {
-        _18to24: null
-    } : value == AgeRange._35to44 ? {
-        _35to44: null
-    } : value == AgeRange._65to74 ? {
-        _65to74: null
+    return {
+        streak: value.streak,
+        focusSessions: value.focusSessions,
+        name: value.name,
+        createdAt: value.createdAt,
+        callerUid: value.callerUid,
+        email: value.email,
+        level: to_candid_Level_n14(_uploadFile, _downloadFile, value.level),
+        dailyLimit: value.dailyLimit,
+        currentScreenTime: value.currentScreenTime,
+        totalPoints: value.totalPoints,
+        challenges: value.challenges
+    };
+}
+function to_candid_variant_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Level): {
+    beginner: null;
+} | {
+    focusedMind: null;
+} | {
+    consistent: null;
+} | {
+    digitalMaster: null;
+} {
+    return value == Level.beginner ? {
+        beginner: null
+    } : value == Level.focusedMind ? {
+        focusedMind: null
+    } : value == Level.consistent ? {
+        consistent: null
+    } : value == Level.digitalMaster ? {
+        digitalMaster: null
     } : value;
 }
 function to_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSaveCallerUserProfile } from '../hooks/useProfile';
-import { AgeRange } from '../backend';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { Level } from '../backend';
 import {
   Dialog,
   DialogContent,
@@ -12,52 +13,46 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 
-const AGE_RANGE_LABELS: Record<AgeRange, string> = {
-  [AgeRange._18to24]: '18-24',
-  [AgeRange._25to34]: '25-34',
-  [AgeRange._35to44]: '35-44',
-  [AgeRange._45to54]: '45-54',
-  [AgeRange._55to64]: '55-64',
-  [AgeRange._65to74]: '65-74',
-  [AgeRange._75plus]: '75+',
-};
-
 export default function ProfileSetupModal() {
+  const { identity } = useInternetIdentity();
   const [name, setName] = useState('');
-  const [ageRange, setAgeRange] = useState<AgeRange | ''>('');
+  const [email, setEmail] = useState('');
   const [healthGoals, setHealthGoals] = useState('');
 
   const saveProfile = useSaveCallerUserProfile();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !ageRange) return;
+    if (!name.trim() || !identity) return;
 
-    await saveProfile.mutateAsync({
+    const profile = {
+      callerUid: identity.getPrincipal(),
       name: name.trim(),
-      ageRange: ageRange as AgeRange,
-      healthGoals: healthGoals.trim(),
-    });
+      email: email.trim(),
+      dailyLimit: BigInt(180),
+      currentScreenTime: BigInt(0),
+      streak: BigInt(0),
+      totalPoints: BigInt(0),
+      level: Level.beginner,
+      challenges: [],
+      focusSessions: [],
+      createdAt: BigInt(Date.now() * 1000000),
+    };
+
+    await saveProfile.mutateAsync(profile);
   };
 
-  const isValid = name.trim().length > 0 && ageRange !== '';
+  const isValid = name.trim().length > 0;
 
   return (
     <Dialog open={true}>
       <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle className="text-2xl">Welcome to VitaSense</DialogTitle>
+          <DialogTitle className="text-2xl">Welcome to Digital Detox</DialogTitle>
           <DialogDescription>
-            Let's set up your profile to personalize your wellness journey.
+            Let's set up your profile to personalize your digital wellness journey.
           </DialogDescription>
         </DialogHeader>
 
@@ -74,28 +69,23 @@ export default function ProfileSetupModal() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="ageRange">Age Range *</Label>
-            <Select value={ageRange} onValueChange={(value) => setAgeRange(value as AgeRange)}>
-              <SelectTrigger id="ageRange">
-                <SelectValue placeholder="Select your age range" />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(AGE_RANGE_LABELS).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="email">Email (Optional)</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+            />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="healthGoals">Health Goals (Optional)</Label>
+            <Label htmlFor="healthGoals">Goals (Optional)</Label>
             <Textarea
               id="healthGoals"
               value={healthGoals}
               onChange={(e) => setHealthGoals(e.target.value)}
-              placeholder="What are your wellness goals?"
+              placeholder="What do you want to achieve?"
               rows={3}
             />
           </div>

@@ -13,44 +13,63 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const AgeRange = IDL.Variant({
-  '_45to54' : IDL.Null,
-  '_75plus' : IDL.Null,
-  '_25to34' : IDL.Null,
-  '_55to64' : IDL.Null,
-  '_18to24' : IDL.Null,
-  '_35to44' : IDL.Null,
-  '_65to74' : IDL.Null,
-});
 export const Time = IDL.Int;
-export const UserProfile = IDL.Record({
-  'ageRange' : AgeRange,
+export const FocusSession = IDL.Record({
+  'sessionDate' : Time,
+  'durationMinutes' : IDL.Nat,
+});
+export const Level = IDL.Variant({
+  'beginner' : IDL.Null,
+  'focusedMind' : IDL.Null,
+  'consistent' : IDL.Null,
+  'digitalMaster' : IDL.Null,
+});
+export const Challenge = IDL.Record({
+  'id' : IDL.Nat,
+  'endDate' : Time,
+  'name' : IDL.Text,
+  'completed' : IDL.Bool,
+  'description' : IDL.Text,
+  'progress' : IDL.Nat,
+  'startDate' : Time,
+});
+export const DigitalDetoxUser = IDL.Record({
+  'streak' : IDL.Nat,
+  'focusSessions' : IDL.Vec(FocusSession),
   'name' : IDL.Text,
   'createdAt' : Time,
-  'updatedAt' : Time,
-  'healthGoals' : IDL.Text,
-});
-export const HealthLogEntry = IDL.Record({
-  'mood' : IDL.Nat8,
-  'notes' : IDL.Text,
-  'timestamp' : Time,
-  'sleepHours' : IDL.Nat8,
+  'callerUid' : IDL.Principal,
+  'email' : IDL.Text,
+  'level' : Level,
+  'dailyLimit' : IDL.Nat,
+  'currentScreenTime' : IDL.Nat,
+  'totalPoints' : IDL.Nat,
+  'challenges' : IDL.Vec(Challenge),
 });
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addPoints' : IDL.Func([IDL.Nat], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'createHealthLogEntry' : IDL.Func([IDL.Nat8, IDL.Nat8, IDL.Text], [], []),
-  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'createChallenge' : IDL.Func([IDL.Text, IDL.Text, Time, Time], [], []),
+  'getAllUserProfiles' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Principal, DigitalDetoxUser))],
+      ['query'],
+    ),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(DigitalDetoxUser)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getHealthLogEntries' : IDL.Func([], [IDL.Vec(HealthLogEntry)], ['query']),
+  'getChallengeProgress' : IDL.Func([], [IDL.Vec(Challenge)], ['query']),
+  'getFocusSessions' : IDL.Func([], [IDL.Vec(FocusSession)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
-      [IDL.Opt(UserProfile)],
+      [IDL.Opt(DigitalDetoxUser)],
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'saveCallerUserProfile' : IDL.Func([IDL.Text, AgeRange, IDL.Text], [], []),
+  'saveCallerUserProfile' : IDL.Func([DigitalDetoxUser], [], []),
+  'saveFocusSession' : IDL.Func([IDL.Nat], [], []),
+  'updateChallengeProgress' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
 });
 
 export const idlInitArgs = [];
@@ -61,44 +80,67 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const AgeRange = IDL.Variant({
-    '_45to54' : IDL.Null,
-    '_75plus' : IDL.Null,
-    '_25to34' : IDL.Null,
-    '_55to64' : IDL.Null,
-    '_18to24' : IDL.Null,
-    '_35to44' : IDL.Null,
-    '_65to74' : IDL.Null,
-  });
   const Time = IDL.Int;
-  const UserProfile = IDL.Record({
-    'ageRange' : AgeRange,
+  const FocusSession = IDL.Record({
+    'sessionDate' : Time,
+    'durationMinutes' : IDL.Nat,
+  });
+  const Level = IDL.Variant({
+    'beginner' : IDL.Null,
+    'focusedMind' : IDL.Null,
+    'consistent' : IDL.Null,
+    'digitalMaster' : IDL.Null,
+  });
+  const Challenge = IDL.Record({
+    'id' : IDL.Nat,
+    'endDate' : Time,
+    'name' : IDL.Text,
+    'completed' : IDL.Bool,
+    'description' : IDL.Text,
+    'progress' : IDL.Nat,
+    'startDate' : Time,
+  });
+  const DigitalDetoxUser = IDL.Record({
+    'streak' : IDL.Nat,
+    'focusSessions' : IDL.Vec(FocusSession),
     'name' : IDL.Text,
     'createdAt' : Time,
-    'updatedAt' : Time,
-    'healthGoals' : IDL.Text,
-  });
-  const HealthLogEntry = IDL.Record({
-    'mood' : IDL.Nat8,
-    'notes' : IDL.Text,
-    'timestamp' : Time,
-    'sleepHours' : IDL.Nat8,
+    'callerUid' : IDL.Principal,
+    'email' : IDL.Text,
+    'level' : Level,
+    'dailyLimit' : IDL.Nat,
+    'currentScreenTime' : IDL.Nat,
+    'totalPoints' : IDL.Nat,
+    'challenges' : IDL.Vec(Challenge),
   });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addPoints' : IDL.Func([IDL.Nat], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'createHealthLogEntry' : IDL.Func([IDL.Nat8, IDL.Nat8, IDL.Text], [], []),
-    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'createChallenge' : IDL.Func([IDL.Text, IDL.Text, Time, Time], [], []),
+    'getAllUserProfiles' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Principal, DigitalDetoxUser))],
+        ['query'],
+      ),
+    'getCallerUserProfile' : IDL.Func(
+        [],
+        [IDL.Opt(DigitalDetoxUser)],
+        ['query'],
+      ),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getHealthLogEntries' : IDL.Func([], [IDL.Vec(HealthLogEntry)], ['query']),
+    'getChallengeProgress' : IDL.Func([], [IDL.Vec(Challenge)], ['query']),
+    'getFocusSessions' : IDL.Func([], [IDL.Vec(FocusSession)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
-        [IDL.Opt(UserProfile)],
+        [IDL.Opt(DigitalDetoxUser)],
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'saveCallerUserProfile' : IDL.Func([IDL.Text, AgeRange, IDL.Text], [], []),
+    'saveCallerUserProfile' : IDL.Func([DigitalDetoxUser], [], []),
+    'saveFocusSession' : IDL.Func([IDL.Nat], [], []),
+    'updateChallengeProgress' : IDL.Func([IDL.Nat, IDL.Nat], [], []),
   });
 };
 

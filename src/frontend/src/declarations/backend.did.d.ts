@@ -10,40 +10,55 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export type AgeRange = { '_45to54' : null } |
-  { '_75plus' : null } |
-  { '_25to34' : null } |
-  { '_55to64' : null } |
-  { '_18to24' : null } |
-  { '_35to44' : null } |
-  { '_65to74' : null };
-export interface HealthLogEntry {
-  'mood' : number,
-  'notes' : string,
-  'timestamp' : Time,
-  'sleepHours' : number,
+export interface Challenge {
+  'id' : bigint,
+  'endDate' : Time,
+  'name' : string,
+  'completed' : boolean,
+  'description' : string,
+  'progress' : bigint,
+  'startDate' : Time,
 }
-export type Time = bigint;
-export interface UserProfile {
-  'ageRange' : AgeRange,
+export interface DigitalDetoxUser {
+  'streak' : bigint,
+  'focusSessions' : Array<FocusSession>,
   'name' : string,
   'createdAt' : Time,
-  'updatedAt' : Time,
-  'healthGoals' : string,
+  'callerUid' : Principal,
+  'email' : string,
+  'level' : Level,
+  'dailyLimit' : bigint,
+  'currentScreenTime' : bigint,
+  'totalPoints' : bigint,
+  'challenges' : Array<Challenge>,
 }
+export interface FocusSession {
+  'sessionDate' : Time,
+  'durationMinutes' : bigint,
+}
+export type Level = { 'beginner' : null } |
+  { 'focusedMind' : null } |
+  { 'consistent' : null } |
+  { 'digitalMaster' : null };
+export type Time = bigint;
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addPoints' : ActorMethod<[bigint], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'createHealthLogEntry' : ActorMethod<[number, number, string], undefined>,
-  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'createChallenge' : ActorMethod<[string, string, Time, Time], undefined>,
+  'getAllUserProfiles' : ActorMethod<[], Array<[Principal, DigitalDetoxUser]>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [DigitalDetoxUser]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  'getHealthLogEntries' : ActorMethod<[], Array<HealthLogEntry>>,
-  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getChallengeProgress' : ActorMethod<[], Array<Challenge>>,
+  'getFocusSessions' : ActorMethod<[], Array<FocusSession>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [DigitalDetoxUser]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'saveCallerUserProfile' : ActorMethod<[string, AgeRange, string], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[DigitalDetoxUser], undefined>,
+  'saveFocusSession' : ActorMethod<[bigint], undefined>,
+  'updateChallengeProgress' : ActorMethod<[bigint, bigint], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

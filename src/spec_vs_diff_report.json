@@ -1,57 +1,194 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-13T09:47:02.021Z",
-  "summary": "The diff implements the core VitaSense landing/auth/dashboard/profile + health log flows and a themed UI, plus a static “Future AI Insights” page. No clear missing REQ items are provable from the provided diff summary, but several unrequested features were added (notably access control/admin token plumbing and a promotional footer link).",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-24T00:46:26.336Z",
+  "summary": "The implementation covers most requirements but has several missing features and implementation gaps. The backend user management (REQ-1) is implemented with all required fields. Onboarding flow (REQ-2) exists but is incomplete with missing validation and goal dropdown. Dashboard (REQ-3) has partial implementation missing 'Join Challenge' navigation. Focus Mode (REQ-4) is well implemented. Challenges system (REQ-5) is partially complete but missing daily progress tracking and custom challenge duration validation. Statistics page (REQ-6) lacks actual data integration. Gamification (REQ-7) has basic structure but missing badge unlocking and level-up animations. AI Assistant (REQ-8) provides static suggestions without historical analysis. Reminder system (REQ-9) is partially implemented with localStorage but lacks backend persistence and actual notification triggering. Settings page (REQ-10) missing notification preference persistence and data reset confirmation. Visual design (REQ-11) implements dark mode but uses wrong color palette (should be calm blue/soft purple, not sage green).",
+  "missing_requirements": [
     {
-      "description": "Backend access control / authorization system (roles like #user/admin checks) added around profile and health log endpoints, plus an initialization method invoked from the frontend using a secret token.",
-      "reason": "BuildRequest REQ-3/REQ-5 did not request authorization/roles/admin-token initialization; it only required per-principal storage and CRUD/upsert endpoints.",
+      "id": "REQ-2",
+      "requirement": "Main goal dropdown with options: Reduce addiction, Improve focus, Sleep better",
+      "reason": "OnboardingFlow.tsx shows mainGoal as string state but the form implementation is truncated and doesn't show the Select component for goal options",
       "evidence": [
-        "backend/main.mo (imports MixinAuthorization, AccessControl; permission checks/traps in getCallerUserProfile/saveCallerUserProfile/createHealthLogEntry/getHealthLogEntries)",
-        "frontend/src/hooks/useActor.ts (calls actor._initializeAccessControlWithSecret(adminToken) and reads caffeineAdminToken from URL)"
+        "frontend/src/components/OnboardingFlow.tsx"
       ]
     },
     {
-      "description": "Footer includes a promotional/attribution link to caffeine.ai with referral parameters.",
-      "reason": "Not requested by any REQ; user-facing content was specified around VitaSense branding and medical disclaimers, not external promotional links.",
+      "id": "REQ-3",
+      "requirement": "Join Challenge button navigates to challenges feature",
+      "reason": "DashboardPage.tsx shows Join Challenge card but the button has no onClick handler to navigate to challenges view",
       "evidence": [
-        "frontend/src/App.tsx (footer: “Built with ♥ using caffeine.ai” with external link)"
+        "frontend/src/pages/DashboardPage.tsx"
       ]
     },
     {
-      "description": "Dark-mode/system theme switching via next-themes ThemeProvider.",
-      "reason": "REQ-7 asks for a coherent theme; it does not request adding next-themes or system theme switching specifically.",
+      "id": "REQ-5",
+      "requirement": "Track daily progress for challenges",
+      "reason": "Backend has progress field but no mechanism to track daily progress or update it automatically based on user behavior",
       "evidence": [
-        "frontend/src/App.tsx (imports ThemeProvider from 'next-themes' and wraps the app)"
+        "backend/main.mo",
+        "frontend/src/components/ChallengeCard.tsx"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Custom challenge creation with duration validation",
+      "reason": "CustomChallengeDialog.tsx has max validation (90 days) but doesn't enforce minimum duration or validate against reasonable limits per challenge type",
+      "evidence": [
+        "frontend/src/components/CustomChallengeDialog.tsx"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Charts display actual screen time trends from user data",
+      "reason": "ScreenTimeChart.tsx generates mock/random data instead of using actual currentScreenTime from userProfile history",
+      "evidence": [
+        "frontend/src/components/ScreenTimeChart.tsx"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Improvement percentage calculated from baseline",
+      "reason": "StatisticsPage and chart components don't calculate or display improvement percentage metrics",
+      "evidence": [
+        "frontend/src/components/ScreenTimeChart.tsx",
+        "frontend/src/components/FocusHoursChart.tsx"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Badges unlock based on achievements",
+      "reason": "BadgeCollection.tsx displays badge unlock status but there's no backend logic or mutation to actually unlock badges when conditions are met",
+      "evidence": [
+        "frontend/src/components/BadgeCollection.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Level-up animation displays on progression",
+      "reason": "No level-up animation component or trigger exists when user crosses level thresholds",
+      "evidence": [
+        "frontend/src/components/LevelProgressTracker.tsx"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "AI suggestions based on historical usage data analysis",
+      "reason": "AiSuggestions.tsx calls analyzeUserPatterns but the utils/aiAnalysis file is not shown in diff, and suggestions appear to be static/template-based rather than data-driven",
+      "evidence": [
+        "frontend/src/components/AiSuggestions.tsx"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "Daily personalized notification sent at optimal times",
+      "reason": "No notification scheduling or delivery mechanism exists beyond localStorage preferences",
+      "evidence": [
+        "frontend/src/components/ReminderSettings.tsx"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "requirement": "Notification triggers at 80% of daily limit",
+      "reason": "ReminderSettings.tsx stores preference but no component monitors currentScreenTime to trigger notification at 80% threshold",
+      "evidence": [
+        "frontend/src/components/ReminderSettings.tsx"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "requirement": "Reminder preferences saved to user profile",
+      "reason": "ReminderSettings uses localStorage only, not persisted to backend DigitalDetoxUser profile",
+      "evidence": [
+        "frontend/src/components/ReminderSettings.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "requirement": "Notification settings persist across sessions via backend",
+      "reason": "Settings stored in localStorage won't sync across devices or persist if localStorage is cleared",
+      "evidence": [
+        "frontend/src/components/ReminderSettings.tsx"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Calm blue and soft purple color palette as default dark mode theme",
+      "reason": "index.css implements sage green primary (240 hue appears to be intended as blue but OKLCH values suggest warm neutrals) instead of explicit calm blue and soft purple system",
+      "evidence": [
+        "frontend/src/index.css"
       ]
     }
   ],
-  "confidence": 0.62,
+  "hallucinated_features": [
+    {
+      "description": "Migration system from health-focused backend",
+      "reason": "migration.mo includes old health-focused types (AgeRange, HealthLogEntry, OldUserProfile) which were not requested and suggest incomplete migration from previous implementation",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "description": "Health log related components and hooks",
+      "reason": "Files HealthLogComposer.tsx, HealthLogList.tsx still mentioned in frontend-file-summaries.txt but marked as removed in diff summary, indicating incomplete cleanup from health tracking app",
+      "evidence": [
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Caffeine.ai attribution footer",
+      "reason": "App.tsx includes prominent Caffeine.ai branding in footer which was not requested in requirements",
+      "evidence": [
+        "frontend/src/App.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.82,
   "changed_files": [
-    "all_files_summary.json",
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
     "frontend/src/App.tsx",
+    "frontend/src/components/AiSuggestions.tsx",
     "frontend/src/components/AppHeader.tsx",
     "frontend/src/components/AuthButton.tsx",
+    "frontend/src/components/BadgeCollection.tsx",
+    "frontend/src/components/BottomNavigation.tsx",
+    "frontend/src/components/ChallengeCard.tsx",
+    "frontend/src/components/CustomChallengeDialog.tsx",
+    "frontend/src/components/DashboardStats.tsx",
+    "frontend/src/components/DataResetDialog.tsx",
+    "frontend/src/components/ExitWarningDialog.tsx",
+    "frontend/src/components/FocusHoursChart.tsx",
+    "frontend/src/components/FocusTimer.tsx",
     "frontend/src/components/HealthLogComposer.tsx",
     "frontend/src/components/HealthLogList.tsx",
+    "frontend/src/components/LevelProgressTracker.tsx",
+    "frontend/src/components/MotivationalQuote.tsx",
+    "frontend/src/components/OnboardingFlow.tsx",
     "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/components/ReminderSettings.tsx",
+    "frontend/src/components/ScreenTimeChart.tsx",
+    "frontend/src/components/ScreenTimeProgress.tsx",
     "frontend/src/components/SignedInBadge.tsx",
-    "frontend/src/hooks/useActor.ts",
+    "frontend/src/components/StreakHistory.tsx",
+    "frontend/src/components/SuccessAnimation.tsx",
     "frontend/src/hooks/useHealthLog.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
     "frontend/src/hooks/useProfile.ts",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/index.css",
-    "frontend/src/main.tsx",
+    "frontend/src/pages/AssistantPage.tsx",
+    "frontend/src/pages/ChallengesPage.tsx",
     "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/FocusModePage.tsx",
     "frontend/src/pages/FutureAiInsightsPage.tsx",
     "frontend/src/pages/LandingPage.tsx",
-    "frontend/src/utils/urlParams.ts",
+    "frontend/src/pages/RewardsPage.tsx",
+    "frontend/src/pages/SettingsPage.tsx",
+    "frontend/src/pages/StatisticsPage.tsx",
+    "frontend/src/utils/aiAnalysis.ts",
+    "frontend/src/utils/gamification.ts",
     "frontend/tailwind.config.js",
     "project_state.json"
   ]

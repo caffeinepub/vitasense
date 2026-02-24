@@ -1,10 +1,16 @@
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
-import { Heart, Sparkles } from 'lucide-react';
+import { Smartphone, Menu } from 'lucide-react';
 import AuthButton from './AuthButton';
 import SignedInBadge from './SignedInBadge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-type View = 'landing' | 'dashboard' | 'insights';
+type View = 'landing' | 'dashboard' | 'focus' | 'challenges' | 'statistics' | 'rewards' | 'assistant' | 'settings';
 
 interface AppHeaderProps {
   currentView: View;
@@ -23,36 +29,48 @@ export default function AppHeader({ currentView, onNavigate, isAuthenticated }: 
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
               <img
-                src="/assets/generated/vitasense-logo.dim_512x512.png"
-                alt="VitaSense"
-                className="h-8 w-8"
+                src="/assets/generated/app-icon.dim_512x512.png"
+                alt="Digital Detox"
+                className="h-8 w-8 rounded-lg"
               />
-              <span className="font-display text-xl font-semibold text-foreground">
-                VitaSense
+              <span className="font-display text-xl font-semibold text-foreground hidden sm:inline">
+                Digital Detox
               </span>
             </button>
 
             <nav className="hidden md:flex items-center gap-1">
               {isAuthenticated && (
-                <Button
-                  variant={currentView === 'dashboard' ? 'secondary' : 'ghost'}
-                  size="sm"
-                  onClick={() => onNavigate('dashboard')}
-                  className="gap-2"
-                >
-                  <Heart className="h-4 w-4" />
-                  Dashboard
-                </Button>
+                <>
+                  <Button
+                    variant={currentView === 'dashboard' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => onNavigate('dashboard')}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button
+                    variant={currentView === 'focus' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => onNavigate('focus')}
+                  >
+                    Focus
+                  </Button>
+                  <Button
+                    variant={currentView === 'challenges' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => onNavigate('challenges')}
+                  >
+                    Challenges
+                  </Button>
+                  <Button
+                    variant={currentView === 'statistics' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => onNavigate('statistics')}
+                  >
+                    Statistics
+                  </Button>
+                </>
               )}
-              <Button
-                variant={currentView === 'insights' ? 'secondary' : 'ghost'}
-                size="sm"
-                onClick={() => onNavigate('insights')}
-                className="gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                AI Insights
-              </Button>
             </nav>
           </div>
 

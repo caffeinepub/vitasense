@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { UserProfile, AgeRange } from '../backend';
+import { DigitalDetoxUser } from '../backend';
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
 
-  const query = useQuery<UserProfile | null>({
+  const query = useQuery<DigitalDetoxUser | null>({
     queryKey: ['currentUserProfile'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
@@ -27,17 +27,9 @@ export function useSaveCallerUserProfile() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      name,
-      ageRange,
-      healthGoals,
-    }: {
-      name: string;
-      ageRange: AgeRange;
-      healthGoals: string;
-    }) => {
+    mutationFn: async (profile: DigitalDetoxUser) => {
       if (!actor) throw new Error('Actor not available');
-      await actor.saveCallerUserProfile(name, ageRange, healthGoals);
+      await actor.saveCallerUserProfile(profile);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });

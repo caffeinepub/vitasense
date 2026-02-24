@@ -17,6 +17,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: [
+                    'Poppins',
                     'Inter',
                     '-apple-system',
                     'BlinkMacSystemFont',
@@ -25,6 +26,7 @@ export default {
                     'sans-serif'
                 ],
                 display: [
+                    'Poppins',
                     'Inter',
                     '-apple-system',
                     'BlinkMacSystemFont',
@@ -88,12 +90,15 @@ export default {
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',
-                sm: 'calc(var(--radius) - 4px)'
+                sm: 'calc(var(--radius) - 4px)',
+                xl: 'calc(var(--radius) + 4px)',
+                '2xl': 'calc(var(--radius) + 8px)'
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
                 soft: '0 2px 8px -2px rgba(0,0,0,0.08)',
-                medium: '0 4px 16px -4px rgba(0,0,0,0.12)'
+                medium: '0 4px 16px -4px rgba(0,0,0,0.12)',
+                glow: '0 0 20px -5px oklch(var(--primary) / 0.3)'
             },
             keyframes: {
                 'accordion-down': {
@@ -107,12 +112,22 @@ export default {
                 'fade-in': {
                     from: { opacity: '0', transform: 'translateY(10px)' },
                     to: { opacity: '1', transform: 'translateY(0)' }
+                },
+                'slide-up': {
+                    from: { opacity: '0', transform: 'translateY(20px)' },
+                    to: { opacity: '1', transform: 'translateY(0)' }
+                },
+                'pulse-glow': {
+                    '0%, 100%': { opacity: '1' },
+                    '50%': { opacity: '0.6' }
                 }
             },
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
-                'fade-in': 'fade-in 0.5s ease-out'
+                'fade-in': 'fade-in 0.5s ease-out',
+                'slide-up': 'slide-up 0.6s ease-out',
+                'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
             }
         }
     },
